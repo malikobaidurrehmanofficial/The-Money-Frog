@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Money Frog</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      color: #f0f0f0;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: #ffd700;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    }
+
+    header p {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      color: #b0c4de;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .nav-card {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 28px 20px;
+      text-align: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .nav-card .icon {
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+    }
+
+    .nav-card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      color: #ffd700;
+    }
+
+    .nav-card p {
+      font-size: 0.85rem;
+      color: #9ab;
+    }
+
+    /* Placeholder (coming-soon) cards */
+    .nav-card.placeholder {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .nav-card.placeholder h2 {
+      color: #aaa;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.7rem;
+      background: rgba(255, 200, 0, 0.2);
+      color: #ffc800;
+      border: 1px solid #ffc800;
+      border-radius: 20px;
+      padding: 2px 10px;
+    }
+
+    footer {
+      margin-top: 60px;
+      font-size: 0.8rem;
+      color: #556;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🐸 The Money Frog</h1>
+    <p>Your personal finance hub — pick a section to get started</p>
+  </header>
+
+  <nav class="nav-grid">
+
+    <!-- ✅ Working link -->
+    <a href="content.html" class="nav-card">
+      <div class="icon">📄</div>
+      <h2>Content</h2>
+      <p>Main content &amp; money frog details</p>
+    </a>
+
+    <!-- 🔜 Placeholder links — enable when the files are ready -->
+    <a href="about.html" class="nav-card placeholder">
+      <div class="icon">ℹ️</div>
+      <h2>About</h2>
+      <p>About The Money Frog</p>
+      <span class="badge">Coming Soon</span>
+    </a>
+
+    <a href="tracker.html" class="nav-card placeholder">
+      <div class="icon">📊</div>
+      <h2>Tracker</h2>
+      <p>Track your finances</p>
+      <span class="badge">Coming Soon</span>
+    </a>
+
+    <a href="tips.html" class="nav-card placeholder">
+      <div class="icon">💡</div>
+      <h2>Tips</h2>
+      <p>Money-saving tips &amp; tricks</p>
+      <span class="badge">Coming Soon</span>
+    </a>
+
+    <a href="goals.html" class="nav-card placeholder">
+      <div class="icon">🎯</div>
+      <h2>Goals</h2>
+      <p>Set &amp; monitor financial goals</p>
+      <span class="badge">Coming Soon</span>
+    </a>
+
+    <a href="contact.html" class="nav-card placeholder">
+      <div class="icon">✉️</div>
+      <h2>Contact</h2>
+      <p>Get in touch</p>
+      <span class="badge">Coming Soon</span>
+    </a>
+
+  </nav>
+
+  <footer>
+    &copy; 2026 The Money Frog &mdash; All rights reserved
+  </footer>
+
+</body>
+</html>
