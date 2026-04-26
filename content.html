@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Money Frog — Content Master Document</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&family=Instrument+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #ede8dc;
+    --card: #ffffff;
+    --dark: #1a1a18;
+    --green: #2a5c3f;
+    --green-light: #3d7a57;
+    --gold: #c8941a;
+    --gold-light: #e8b840;
+    --red: #c0392b;
+    --blue: #1a4a7a;
+    --muted: #8a8578;
+    --border: #d4cec0;
+    --tag-c1: #2a5c3f;
+    --tag-c2: #7a3a1a;
+    --tag-c3: #1a3a6a;
+    --tag-ai: #4a2a6a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--dark);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--green);
+    padding: 52px 64px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '🐸';
+    position: absolute;
+    right: 64px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 120px;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+  .header-eyebrow {
+    font-family: 'Instrument Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 58px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.05;
+    margin-bottom: 8px;
+  }
+  .header h1 em {
+    color: var(--gold-light);
+    font-style: normal;
+  }
+  .header-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    max-width: 520px;
+    margin-bottom: 32px;
+  }
+  .header-stats {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Instrument Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+
+  /* SOURCE LEGEND */
+  .legend {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 64px;
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .legend-label {
+    font-family: 'Instrument Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .tag-c1 { background: rgba(42,92,63,0.12); color: var(--tag-c1); border: 1px solid rgba(42,92,63,0.25); }
+  .tag-c2 { background: rgba(122,58,26,0.12); color: var(--tag-c2); border: 1px solid rgba(122,58,26,0.25); }
+  .tag-c3 { background: rgba(26,58,106,0.12); color: var(--tag-c3); border: 1px solid rgba(26,58,106,0.25); }
+  .tag-ai { background: rgba(74,42,106,0.12); color: var(--tag-ai); border: 1px solid rgba(74,42,106,0.25); }
+  .tag-hot { background: rgba(192,57,43,0.10); color: var(--red); border: 1px solid rgba(192,57,43,0.2); }
+
+  /* CONTAINER */
+  .container { padding: 48px 64px 80px; }
+
+  /* SECTION */
+  .section { margin-bottom: 56px; }
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--dark);
+  }
+  .section-left { display: flex; align-items: center; gap: 14px; }
+  .section-icon {
+    width: 38px; height: 38px;
+    background: var(--dark);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .section-count {
+    font-family: 'Instrument Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* TABLE */
+  .content-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .content-table thead {
+    background: var(--dark);
+  }
+  .content-table th {
+    text-align: left;
+    padding: 13px 16px;
+    font-family: 'Instrument Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .content-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    font-size: 13px;
+    color: var(--dark);
+  }
+  .content-table tr:last-child td { border-bottom: none; }
+  .content-table tr:hover td { background: rgba(42,92,63,0.03); }
+
+  .vid-num {
+    font-family: 'Instrument Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .vid-title {
+    font-weight: 500;
+    color: var(--dark);
+    max-width: 320px;
+  }
+  .vid-hook {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    max-width: 200px;
+  }
+  .priority {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+  .pri-high { background: var(--red); }
+  .pri-med { background: var(--gold); }
+  .pri-low { background: var(--green-light); }
+
+  /* PILLAR BADGES */
+  .pillar-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .pb-math { background: rgba(200,148,26,0.12); color: var(--gold); }
+  .pb-contra { background: rgba(192,57,43,0.10); color: var(--red); }
+  .pb-age { background: rgba(26,74,122,0.10); color: var(--blue); }
+  .pb-list { background: rgba(42,92,63,0.12); color: var(--green); }
+
+  /* SUMMARY CARDS */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  .sum-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 22px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .sum-source {
+    font-family: 'Instrument Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .sum-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .sum-c1 { color: var(--tag-c1); }
+  .sum-c2 { color: var(--tag-c2); }
+  .sum-c3 { color: var(--tag-c3); }
+  .sum-ai { color: var(--tag-ai); }
+  .sum-desc { font-size: 12px; color: var(--muted); }
+
+  /* INSIGHTS BOX */
+  .insight {
+    background: var(--green);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .insight-item {}
+  .insight-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .insight-text { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+
+  /* FOOTER */
+  .doc-footer {
+    margin-top: 60px;
+    padding-top: 28px;
+    border-top: 2px solid var(--dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-brand {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--green);
+  }
+  .footer-note {
+    font-family: 'Instrument Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* CONTENT STRATEGY NOTE */
+  .strategy-note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--green);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #555;
+  }
+  .strategy-note strong { color: var(--dark); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-eyebrow">🐸 The Money Frog — Internal Content Document</div>
+  <h1>Content <em>Master</em><br>Ideas Table</h1>
+  <p class="header-sub">Every video idea extracted from competitor research + Claude brainstorming, fully sourced and organized by content pillar.</p>
+  <div class="header-stats">
+    <div class="stat"><span class="stat-num">60+</span><span class="stat-label">Total Ideas</span></div>
+    <div class="stat"><span class="stat-num">3</span><span class="stat-label">Competitors Analyzed</span></div>
+    <div class="stat"><span class="stat-num">4</span><span class="stat-label">Content Pillars</span></div>
+    <div class="stat"><span class="stat-num">US</span><span class="stat-label">Target Market</span></div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <span class="legend-label">Source Key →</span>
+  <span class="tag tag-c1">🟢 Competitor 1 — Finance/Math Channel (32K)</span>
+  <span class="tag tag-c2">🟤 Competitor 2 — Uncle John Financial</span>
+  <span class="tag tag-c3">🔵 Competitor 3 — Alic Channel (63K)</span>
+  <span class="tag tag-ai">🟣 Claude Brainstorm</span>
+  <span class="tag tag-hot">🔴 HIGH PRIORITY</span>
+</div>
+
+<div class="container">
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="sum-source">Competitor 1 — Math Channel</div>
+      <div class="sum-num sum-c1">18</div>
+      <div class="sum-desc">Ideas extracted. Best formula: "[X] vs [Y] — The Real Math." Proven up to 1.1M views.</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-source">Competitor 2 — Uncle John</div>
+      <div class="sum-num sum-c2">12</div>
+      <div class="sum-desc">Ideas extracted. Best formula: Age-specific + mistake framing. Proven up to 280K views.</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-source">Competitor 3 — Alic (63K)</div>
+      <div class="sum-num sum-c3">18</div>
+      <div class="sum-desc">Ideas extracted. Best formula: Identity hooks + list videos. Proven up to 1.4M views.</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-source">Claude Brainstorm</div>
+      <div class="sum-num sum-ai">14</div>
+      <div class="sum-desc">Original ideas filling gaps none of the 3 competitors have covered yet.</div>
+    </div>
+  </div>
+
+  <!-- KEY INSIGHTS -->
+  <div class="insight">
+    <div class="insight-item">
+      <div class="insight-title">🏆 Biggest Insight</div>
+      <div class="insight-text">All 3 competitors prove that contrarian titles and real-math comparisons dominate. Generic titles ("how to save money") get under 5K views. Specific, challenging titles get 100K–1.4M.</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-title">📊 The Gap Nobody Owns</div>
+      <div class="insight-text">No competitor combines all 3 formulas in one channel. C1 does math. Uncle John does age hooks. Alic does identity. The Money Frog does ALL THREE — that's the competitive edge.</div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-title">⚡ Start With These</div>
+      <div class="insight-text">High priority videos marked in red below are topics that have proven 100K+ views across competitors but have NOT been exhausted yet. These are your first uploads.</div>
+    </div>
+  </div>
+
+  <!-- PILLAR 1: REAL MATH -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-left">
+        <div class="section-icon">📐</div>
+        <div class="section-title">Pillar 1 — "The Real Math" Comparisons</div>
+      </div>
+      <span class="section-count">40% OF CONTENT — HIGHEST VIRAL POTENTIAL</span>
+    </div>
+
+    <div class="strategy-note">
+      <strong>Why this works:</strong> Competitor 1 got 1.1M views on "Real Estate vs Stocks — The Real Math" and 540K on "Leasing vs Buying a Car." The format triggers curiosity because people think they know the answer — but they want confirmation or to be proven wrong. Every video in this pillar must show actual calculations on screen.
+    </div>
+
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Video Title Idea</th>
+          <th>Hook Angle</th>
+          <th>Source</th>
+          <th>Pillar</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="vid-num">01</td>
+          <td class="vid-title">Renting vs Buying in 2026 — The Real Math Nobody Shows You</td>
+          <td class="vid-hook">Most people assume buying always wins. The math says otherwise in 2026.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">02</td>
+          <td class="vid-title">401k vs Roth IRA — Which One Actually Wins After Tax?</td>
+          <td class="vid-hook">Everyone debates this. Run the numbers for 3 different income levels.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">03</td>
+          <td class="vid-title">Real Estate vs Stocks — The Real Math (2026 Update)</td>
+          <td class="vid-hook">C1 got 1.1M on this. An updated version with 2026 data is fair game.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">04</td>
+          <td class="vid-title">Leasing vs Buying a Car — The Real Math</td>
+          <td class="vid-hook">C1 got 540K. A fresh version with current rates is still untapped.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">05</td>
+          <td class="vid-title">Paying Off Debt vs Investing — The Real Math (The Answer Surprises People)</td>
+          <td class="vid-hook">Dave Ramsey says pay off debt first. Math doesn't always agree.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">06</td>
+          <td class="vid-title">Gold vs Real Estate — The Real Math (Which One Wins?)</td>
+          <td class="vid-hook">C1 did this at 9.4K — underdeveloped topic with room to go bigger.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">07</td>
+          <td class="vid-title">Term Life vs Whole Life Insurance — The Math Is Shocking</td>
+          <td class="vid-hook">Whole Life agents push hard. The math destroys their argument.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">08</td>
+          <td class="vid-title">Index Funds vs Actively Managed Funds — The 30-Year Math</td>
+          <td class="vid-hook">Fund managers claim they beat the market. Long-term data disagrees.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">09</td>
+          <td class="vid-title">Paying Extra on Your Mortgage vs Investing the Difference</td>
+          <td class="vid-hook">Most people assume extra mortgage payments are always smart.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">10</td>
+          <td class="vid-title">Social Security at 62 vs 67 vs 70 — The Lifetime Math</td>
+          <td class="vid-hook">Uncle John touched this but never ran the full lifetime comparison.</td>
+          <td><span class="tag tag-c2">Uncle John</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">11</td>
+          <td class="vid-title">New Car vs Used Car — The Real Math Over 10 Years</td>
+          <td class="vid-hook">Depreciation data makes the answer very clear but nobody shows it visually.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">12</td>
+          <td class="vid-title">HSA vs FSA — The Tax Math Most Americans Completely Miss</td>
+          <td class="vid-hook">HSA is the most underused tax tool available. Nobody explains the math.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PILLAR 2: CONTRARIAN -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-left">
+        <div class="section-icon">⚡</div>
+        <div class="section-title">Pillar 2 — Contrarian Takes</div>
+      </div>
+      <span class="section-count">25% OF CONTENT — HIGHEST CLICK-THROUGH RATE</span>
+    </div>
+
+    <div class="strategy-note">
+      <strong>Why this works:</strong> Alic got 269K on "The High Income Poverty Trap," 163K on "Why Looking Poor Is SO Important," and 98K on "STOP Telling Banks Your Income." Uncle John got 110K on "Do NOT Convert to a Roth IRA." Contrarian titles make people click to either agree or argue — both reactions drive the algorithm.
+    </div>
+
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Video Title Idea</th>
+          <th>Hook Angle</th>
+          <th>Source</th>
+          <th>Pillar</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="vid-num">13</td>
+          <td class="vid-title">Stop Maxing Your 401k — Here's the Math They Don't Show You</td>
+          <td class="vid-hook">Every financial advisor says max it. But for many income levels, it's wrong.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">14</td>
+          <td class="vid-title">Why Paying Off Your Mortgage Early Is Actually a Mistake</td>
+          <td class="vid-hook">Feels safe. The math says it costs you hundreds of thousands.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">15</td>
+          <td class="vid-title">Don't Pay Cash for Your Next Car — Here's Why</td>
+          <td class="vid-hook">C1 got 261K on this. A fresh angle with updated 2026 financing rates.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">16</td>
+          <td class="vid-title">Why Your High Yield Savings Account Is Quietly Making You Poorer</td>
+          <td class="vid-hook">C1 got 68K. Inflation-adjusted returns destroy the HYSA narrative.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">17</td>
+          <td class="vid-title">Do NOT Convert to a Roth IRA (6 Reasons the Gurus Won't Tell You)</td>
+          <td class="vid-hook">Uncle John got 110K. Expand with more scenarios and visual math.</td>
+          <td><span class="tag tag-c2">Uncle John</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">18</td>
+          <td class="vid-title">Why Looking Poor Is SO Important (The Wealthy Know This)</td>
+          <td class="vid-hook">Alic got 163K. A deeper math-backed version would outperform the original.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">19</td>
+          <td class="vid-title">The High Income Poverty Trap — Rich on Paper, Broke in Reality</td>
+          <td class="vid-hook">Alic got 269K. Your version adds the math of exactly where the money goes.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">20</td>
+          <td class="vid-title">STOP Telling Your Bank Your Real Income (Here's Why)</td>
+          <td class="vid-hook">Alic got 98K. Banks use income data against you in ways people don't realize.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">21</td>
+          <td class="vid-title">Why a Perfect Credit Score Might Actually Be Hurting You</td>
+          <td class="vid-hook">People obsess over 800+ scores. There's a real downside nobody discusses.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">22</td>
+          <td class="vid-title">Why Dave Ramsey's Debt Advice Is Wrong for Most Americans</td>
+          <td class="vid-hook">Attacking a known authority figure drives massive click-through.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">23</td>
+          <td class="vid-title">Everyone Thinks Car Payments Are Normal — They're Not</td>
+          <td class="vid-hook">Alic got 34K. Expand with 10-year cost calculation.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">24</td>
+          <td class="vid-title">Why Saving Money Is Actually Keeping You Poor</td>
+          <td class="vid-hook">Savings accounts lose to inflation. Reframe "saving" vs "investing."</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PILLAR 3: AGE/SITUATION -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-left">
+        <div class="section-icon">🎯</div>
+        <div class="section-title">Pillar 3 — Age & Situation Hooks</div>
+      </div>
+      <span class="section-count">20% OF CONTENT — HIGHEST SUBSCRIBER CONVERSION</span>
+    </div>
+
+    <div class="strategy-note">
+      <strong>Why this works:</strong> Uncle John got 255K on "Why Your 40s Decide Whether You Retire Comfortable," 157K on "You'll Stop Working at 59½ Once You Understand This," Alic got 255K on "Why Your 40s Decide..." Age-specific content makes viewers feel personally targeted — they subscribe because they think you understand their exact situation.
+    </div>
+
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Video Title Idea</th>
+          <th>Hook Angle</th>
+          <th>Source</th>
+          <th>Pillar</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="vid-num">25</td>
+          <td class="vid-title">40 Years Old With Nothing Saved — Do This Immediately</td>
+          <td class="vid-hook">Huge audience of late starters who feel shame but want a real plan.</td>
+          <td><span class="tag tag-c2">Uncle John</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">26</td>
+          <td class="vid-title">Why Your 40s Are Your Most Financially Dangerous Decade</td>
+          <td class="vid-hook">Alic got 255K on this exact framing. Your version adds the math.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">27</td>
+          <td class="vid-title">Making $80K and Still Broke? Here's Exactly Why</td>
+          <td class="vid-hook">Income guilt is real. This audience is huge and emotionally engaged.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">28</td>
+          <td class="vid-title">50 Years Old With $0 Saved — Is It Too Late? (Honest Answer)</td>
+          <td class="vid-hook">Uncle John's audience. Desperate, motivated, clicks immediately.</td>
+          <td><span class="tag tag-c2">Uncle John</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">29</td>
+          <td class="vid-title">Why Your 50s Decide Whether You Retire Rich or Stressed</td>
+          <td class="vid-hook">C3 got 8.2K — underdeveloped. A math-backed version would do 10x.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">30</td>
+          <td class="vid-title">30 Years Old With Nothing Saved — Your 10-Year Recovery Plan</td>
+          <td class="vid-hook">30-year-olds who feel behind respond strongly to recovery roadmaps.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">31</td>
+          <td class="vid-title">What $100K Salary Actually Buys You in 2026 (After Tax & Bills)</td>
+          <td class="vid-hook">6-figure salary is the American dream. The reality shocks people.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">32</td>
+          <td class="vid-title">Two Paychecks and Still Broke — Here's the Exact Reason Why</td>
+          <td class="vid-hook">Alic got 12K. Dual income households who can't figure out where money goes.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">33</td>
+          <td class="vid-title">9 Financial Milestones You Must Hit Before 40 (Most People Miss 3)</td>
+          <td class="vid-hook">Alic got 7.5K — underperformed. A stronger title and math would fix it.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">34</td>
+          <td class="vid-title">The $10,000 Mistake Most Americans Make in Their 30s</td>
+          <td class="vid-hook">Specific dollar amount + age + hidden mistake = very strong hook combo.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">35</td>
+          <td class="vid-title">You'll Stop Working at 59½ Once You Understand This Rule</td>
+          <td class="vid-hook">Uncle John got 157K on this. The 59½ rule is underexplained everywhere.</td>
+          <td><span class="tag tag-c2">Uncle John</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">36</td>
+          <td class="vid-title">How Much House Your Salary ACTUALLY Buys You in 2026</td>
+          <td class="vid-hook">Alic got 12K. A city-by-city breakdown with actual math would go much bigger.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-age">Age Hook</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PILLAR 4: LIST VIDEOS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-left">
+        <div class="section-icon">📋</div>
+        <div class="section-title">Pillar 4 — List & Habit Videos</div>
+      </div>
+      <span class="section-count">15% OF CONTENT — RELIABLE 10K–50K PERFORMERS</span>
+    </div>
+
+    <div class="strategy-note">
+      <strong>Why this works:</strong> Alic's list videos consistently hit 20K–47K views. "Master Financial Literacy in 62 Minutes" got 47K, "20 Frugal Habits" got 22K, "100 Money Tips" got 22K. These videos are easy to produce with AI, great for watch time, and feed the algorithm between your viral pillars. Never lead the channel with these — use them as filler between bigger videos.
+    </div>
+
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Video Title Idea</th>
+          <th>Hook Angle</th>
+          <th>Source</th>
+          <th>Pillar</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="vid-num">37</td>
+          <td class="vid-title">12 Things Quietly Draining Your Wealth in 2026 (Most People Miss #8)</td>
+          <td class="vid-hook">Curiosity gap on #8 drives completion rate. Alic's best list formula.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">38</td>
+          <td class="vid-title">10 Money Habits of Americans Who Retire Before 55</td>
+          <td class="vid-hook">Early retirement aspirational content with behavioral specifics.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">39</td>
+          <td class="vid-title">15 Financial Mistakes Americans Make in Their 30s</td>
+          <td class="vid-hook">Age-specific list hybrid — gets both list viewers and age hook audience.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">40</td>
+          <td class="vid-title">7 Money Lies Your Parents Taught You (That Are Costing You Now)</td>
+          <td class="vid-hook">Generational money myths. Emotionally resonant. Highly shareable.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">41</td>
+          <td class="vid-title">20 Subscriptions You're Paying For That Are Wasting $5,000 a Year</td>
+          <td class="vid-hook">Alic got 1.4K — weak title. Reframe with specific dollar amount upfront.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">42</td>
+          <td class="vid-title">13 Investing Myths You Still Believe (That Are Costing You Thousands)</td>
+          <td class="vid-hook">C1 got 12K. A stronger hook + better thumbnail could push this to 50K+.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">43</td>
+          <td class="vid-title">5 Things That Will Ruin Your Retirement (Number 3 Is the Most Common)</td>
+          <td class="vid-hook">Uncle John got 4.5K — underperformed due to weak thumbnail. Strong topic.</td>
+          <td><span class="tag tag-c2">Uncle John</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">44</td>
+          <td class="vid-title">10 Unsexy Money Habits That Build Real Wealth (Not the Flashy Ones)</td>
+          <td class="vid-hook">Alic got 137K. Your version adds the math of each habit's 10-year impact.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">45</td>
+          <td class="vid-title">15 Signs You're Better With Money Than Most Americans</td>
+          <td class="vid-hook">Alic got 19K. Positive identity content drives shares and saves.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-low"></span>LOW</td>
+        </tr>
+        <tr>
+          <td class="vid-num">46</td>
+          <td class="vid-title">10 Jaw-Dropping Money Stats of the Average American in 2026</td>
+          <td class="vid-hook">Alic got 29K. Data-driven shock content. Easy AI production.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-low"></span>LOW</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BONUS: ORIGINAL IDEAS -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-left">
+        <div class="section-icon">🧠</div>
+        <div class="section-title">Bonus — Original Gap Ideas (No Competitor Has Done These)</div>
+      </div>
+      <span class="section-count">100% CLAUDE BRAINSTORM — UNTAPPED TERRITORY</span>
+    </div>
+
+    <div class="strategy-note">
+      <strong>Why these matter:</strong> These are topics none of your 3 competitors have covered. If even one of these hits, you own that topic on YouTube with zero competition. These are higher risk but higher reward — test 2–3 of these after your first 10 videos are uploaded.
+    </div>
+
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Video Title Idea</th>
+          <th>Why It's Untapped</th>
+          <th>Source</th>
+          <th>Pillar</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="vid-num">47</td>
+          <td class="vid-title">The Buy, Borrow, Die Strategy — How the Ultra Rich Pay Zero Tax Legally</td>
+          <td class="vid-hook">Alic covered it at 8.4K — weak execution. This topic deserves a full math breakdown.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">48</td>
+          <td class="vid-title">The Quiet RMD Mistake 84% of Retirees Make (And How to Avoid It)</td>
+          <td class="vid-hook">Uncle John got 122K — no competitor has gone deeper with visual math on this.</td>
+          <td><span class="tag tag-c2">Uncle John</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-high"></span>HIGH</td>
+        </tr>
+        <tr>
+          <td class="vid-num">49</td>
+          <td class="vid-title">What Happens to Your Money If You Die Without a Will in America</td>
+          <td class="vid-hook">Nobody in personal finance YouTube covers estate basics clearly. Huge search volume.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">50</td>
+          <td class="vid-title">The Compounding Minimum — Most Americans Are Below It and Don't Know</td>
+          <td class="vid-hook">C1 got 56K on a version of this. A clearer math-first version could hit 200K+.</td>
+          <td><span class="tag tag-c1">Competitor 1</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">51</td>
+          <td class="vid-title">The Tax Bracket Myth — Why Moving Up a Bracket Doesn't Work How You Think</td>
+          <td class="vid-hook">Almost everyone misunderstands marginal tax rates. No channel has nailed this visually.</td>
+          <td><span class="tag tag-ai">Claude Brainstorm</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">52</td>
+          <td class="vid-title">Why Your Emergency Fund Is Actually a Wealth Trap</td>
+          <td class="vid-hook">Alic got 3.3K on this — horribly underdeveloped. A math-driven version is untapped.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-contra">Contrarian</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">53</td>
+          <td class="vid-title">How to Retire With $1 Million and Die With $5 Million</td>
+          <td class="vid-hook">Uncle John did 4.6K — weak thumbnail. The concept is incredible if executed right.</td>
+          <td><span class="tag tag-c2">Uncle John</span></td>
+          <td><span class="pillar-badge pb-math">Real Math</span></td>
+          <td><span class="priority pri-med"></span>MED</td>
+        </tr>
+        <tr>
+          <td class="vid-num">54</td>
+          <td class="vid-title">The Paycheck Routine That Automatically Builds Wealth (Step by Step)</td>
+          <td class="vid-hook">Alic got 52K. A more systematic, math-backed version with automation steps.</td>
+          <td><span class="tag tag-c3">Alic Channel</span></td>
+          <td><span class="pillar-badge pb-list">List</span></td>
+          <td><span class="priority pri-low"></span>LOW</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- LAUNCH ORDER -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-left">
+        <div class="section-icon">🚀</div>
+        <div class="section-title">Recommended First 12 Upload Order</div>
+      </div>
+      <span class="section-count">BASED ON HIGHEST PROVEN VIEW POTENTIAL</span>
+    </div>
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th>Upload #</th>
+          <th>Video</th>
+          <th>Pillar</th>
+          <th>Why First</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="vid-num">Upload 1</td><td class="vid-title">Renting vs Buying — The Real Math Nobody Shows You</td><td><span class="pillar-badge pb-math">Real Math</span></td><td style="font-size:12px;color:#777">Sets channel identity immediately as math-first</td></tr>
+        <tr><td class="vid-num">Upload 2</td><td class="vid-title">Why Paying Off Your Mortgage Early Is a Mistake</td><td><span class="pillar-badge pb-contra">Contrarian</span></td><td style="font-size:12px;color:#777">Contrarian hook drives early shares and debate</td></tr>
+        <tr><td class="vid-num">Upload 3</td><td class="vid-title">40 Years Old With Nothing Saved — Do This Immediately</td><td><span class="pillar-badge pb-age">Age Hook</span></td><td style="font-size:12px;color:#777">Age hooks convert viewers to subscribers fastest</td></tr>
+        <tr><td class="vid-num">Upload 4</td><td class="vid-title">401k vs Roth IRA — Which One Actually Wins?</td><td><span class="pillar-badge pb-math">Real Math</span></td><td style="font-size:12px;color:#777">Most searched finance comparison on YouTube</td></tr>
+        <tr><td class="vid-num">Upload 5</td><td class="vid-title">12 Things Quietly Draining Your Wealth in 2026</td><td><span class="pillar-badge pb-list">List</span></td><td style="font-size:12px;color:#777">Easy watch, high completion, feeds algorithm</td></tr>
+        <tr><td class="vid-num">Upload 6</td><td class="vid-title">The High Income Poverty Trap — Rich on Paper, Broke in Reality</td><td><span class="pillar-badge pb-contra">Contrarian</span></td><td style="font-size:12px;color:#777">Proven 269K concept — stronger math version</td></tr>
+        <tr><td class="vid-num">Upload 7</td><td class="vid-title">Stop Maxing Your 401k — Here's the Math</td><td><span class="pillar-badge pb-contra">Contrarian</span></td><td style="font-size:12px;color:#777">Challenges deeply held belief — high debate value</td></tr>
+        <tr><td class="vid-num">Upload 8</td><td class="vid-title">Why Your 40s Are Your Most Financially Dangerous Decade</td><td><span class="pillar-badge pb-age">Age Hook</span></td><td style="font-size:12px;color:#777">Proven 255K concept with room for more depth</td></tr>
+        <tr><td class="vid-num">Upload 9</td><td class="vid-title">Term Life vs Whole Life Insurance — The Math Is Shocking</td><td><span class="pillar-badge pb-math">Real Math</span></td><td style="font-size:12px;color:#777">Untapped comparison — no competitor has nailed this</td></tr>
+        <tr><td class="vid-num">Upload 10</td><td class="vid-title">Making $80K and Still Broke? Here's Exactly Why</td><td><span class="pillar-badge pb-age">Age Hook</span></td><td style="font-size:12px;color:#777">Massive relatable audience — income guilt is universal</td></tr>
+        <tr><td class="vid-num">Upload 11</td><td class="vid-title">Do NOT Convert to a Roth IRA (6 Reasons)</td><td><span class="pillar-badge pb-contra">Contrarian</span></td><td style="font-size:12px;color:#777">Uncle John proved 110K — your math version goes further</td></tr>
+        <tr><td class="vid-num">Upload 12</td><td class="vid-title">Paying Off Debt vs Investing — The Real Math</td><td><span class="pillar-badge pb-math">Real Math</span></td><td style="font-size:12px;color:#777">Dave Ramsey angle makes it inherently controversial</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="footer-brand">🐸 THE MONEY FROG</div>
+    <div class="footer-note">CONTENT MASTER TABLE v1.0 — 54 IDEAS — APRIL 2026</div>
+    <div class="footer-note">INTERNAL USE ONLY</div>
+  </div>
+
+</div>
+</body>
+</html>
