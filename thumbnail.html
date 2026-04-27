@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐸 The Money Frog — Thumbnail Prompt Vault</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Darker+Grotesque:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08090a;
+    --surface: #0f1012;
+    --card: #13151a;
+    --card2: #181b21;
+    --border: #1f2229;
+    --border2: #252a35;
+    --green: #39ff8f;
+    --green-dim: rgba(57,255,143,0.08);
+    --green-border: rgba(57,255,143,0.18);
+    --gold: #ffc94d;
+    --gold-dim: rgba(255,201,77,0.08);
+    --red: #ff4757;
+    --blue: #70b8ff;
+    --purple: #b48eff;
+    --orange: #ff8c42;
+    --white: #eef0f4;
+    --muted: #4a5568;
+    --muted2: #2d3748;
+    --text: #c8cdd8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Familjen Grotesk', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 44px 52px 36px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(57,255,143,0.03) 0%, transparent 60%);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(57,255,143,0.04) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-emoji { font-size: 28px; }
+  .logo-name {
+    font-family: 'Darker Grotesque', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--green);
+    letter-spacing: -0.3px;
+  }
+  .logo-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-top: 1px;
+  }
+  .version-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+  .header h1 {
+    font-family: 'Darker Grotesque', sans-serif;
+    font-size: 52px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .header h1 span { color: var(--green); }
+  .header-sub {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 580px;
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    background: rgba(8,9,10,0.97);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    display: flex;
+    padding: 0 52px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 2px;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    padding: 14px 18px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'Familjen Grotesk', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.18s;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--green); border-bottom-color: var(--green); }
+  .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+
+  /* LAYOUT */
+  .content { padding: 40px 52px 80px; max-width: 1080px; }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeUp 0.25s ease; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION TITLE */
+  .sec-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sec-title {
+    font-family: 'Darker Grotesque', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .sec-desc { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 560px; margin-bottom: 28px; }
+
+  /* TAGS */
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .tg { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+  .tgo { background: rgba(255,201,77,0.08); color: var(--gold); border: 1px solid rgba(255,201,77,0.2); }
+  .tb { background: rgba(112,184,255,0.08); color: var(--blue); border: 1px solid rgba(112,184,255,0.2); }
+  .tr { background: rgba(255,71,87,0.08); color: var(--red); border: 1px solid rgba(255,71,87,0.2); }
+  .tp { background: rgba(180,142,255,0.08); color: var(--purple); border: 1px solid rgba(180,142,255,0.2); }
+
+  /* INFO BOX */
+  .info {
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: #6dbb8a;
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+  .info strong { color: var(--green); }
+
+  /* PROMPT CARD */
+  .prompt-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+  .prompt-card:hover { border-color: var(--border2); }
+  .prompt-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+  .pch-left { display: flex; align-items: center; gap: 10px; }
+  .pch-icon { font-size: 15px; }
+  .pch-title { font-size: 13px; font-weight: 600; color: var(--white); }
+  .pch-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    border-radius: 6px;
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Familjen Grotesk', sans-serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .copy-btn:hover { background: rgba(57,255,143,0.14); border-color: var(--green); }
+  .copy-btn.done { background: rgba(57,255,143,0.2); }
+  .prompt-body { padding: 18px 20px; }
+  .prompt-pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.85;
+    color: #8aab96;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* THUMBNAIL STYLE CARDS */
+  .style-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .style-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .style-card:hover { transform: translateY(-3px); border-color: var(--border2); }
+  .style-card.active-style { border-color: var(--green); }
+  .style-preview {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sp-a { background: linear-gradient(135deg, #1a0000, #3d0000); }
+  .sp-b { background: linear-gradient(135deg, #0a1628, #1a3a6a); }
+  .sp-c { background: linear-gradient(135deg, #0d1a00, #1a3500); }
+  .sp-d { background: linear-gradient(135deg, #1a1200, #3d2d00); }
+  .sp-e { background: linear-gradient(135deg, #110011, #2d0044); }
+  .sp-f { background: linear-gradient(135deg, #001a1a, #003d3d); }
+  .sp-g { background: linear-gradient(135deg, #1a0a00, #3d1800); }
+  .sp-h { background: linear-gradient(135deg, #000d1a, #001f3d); }
+  .style-preview-label {
+    position: absolute;
+    bottom: 8px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: 'Darker Grotesque', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .style-info { padding: 14px; }
+  .style-name {
+    font-family: 'Darker Grotesque', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .style-desc { font-size: 11px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+  .style-use {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--green);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ROTATION TABLE */
+  .rot-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .rot-table th {
+    background: var(--card2);
+    padding: 11px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .rot-table td {
+    padding: 11px 16px;
+    font-size: 12px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .rot-table tr:last-child td { border-bottom: none; }
+  .rot-table td:first-child { color: var(--green); font-weight: 600; }
+
+  /* BUILDER */
+  .builder {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 26px;
+    margin-bottom: 24px;
+  }
+  .builder-title {
+    font-family: 'Darker Grotesque', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .builder-desc { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+
+  .builder-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .builder-group {}
+  .builder-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .builder-opts { display: flex; flex-direction: column; gap: 4px; }
+  .bopt {
+    padding: 7px 12px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Familjen Grotesk', sans-serif;
+  }
+  .bopt:hover { color: var(--white); border-color: var(--border2); }
+  .bopt.sel { background: var(--green-dim); border-color: var(--green-border); color: var(--green); }
+
+  .build-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--green);
+    color: #000;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Familjen Grotesk', sans-serif;
+    letter-spacing: 0.2px;
+    transition: opacity 0.15s;
+  }
+  .build-btn:hover { opacity: 0.88; }
+
+  .build-output {
+    display: none;
+    margin-top: 18px;
+    background: var(--card2);
+    border: 1px solid var(--green-border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .build-output.show { display: block; animation: fadeUp 0.25s ease; }
+  .bo-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .bo-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: #8aab96;
+    line-height: 1.85;
+    white-space: pre-wrap;
+  }
+  .bo-copy {
+    margin-top: 12px;
+    padding: 7px 14px;
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    border-radius: 6px;
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Familjen Grotesk', sans-serif;
+    transition: all 0.15s;
+  }
+  .bo-copy:hover { background: rgba(57,255,143,0.14); }
+
+  /* DADDU RULES */
+  .daddu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .daddu-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .dc-icon { font-size: 22px; margin-bottom: 8px; }
+  .dc-title { font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 6px; }
+  .dc-body { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .dc-body .yes { color: var(--green); font-weight: 600; }
+  .dc-body .no { color: var(--red); font-weight: 600; }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--muted2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-row">
+    <div class="logo">
+      <span class="logo-emoji">🐸</span>
+      <div>
+        <div class="logo-name">The Money Frog</div>
+        <span class="logo-tag">Thumbnail Prompt Vault v1.0</span>
+      </div>
+    </div>
+    <span class="version-pill">● 8 STYLES · 3 PROMPT TYPES</span>
+  </div>
+  <h1>Thumbnail <span>Prompt</span> Vault</h1>
+  <p class="header-sub">Every prompt, style, and rule for creating high-CTR thumbnails with Daddu as your character. Rotate styles, never repeat layouts, always get 8 different options per video.</p>
+</header>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <div class="nav">
+    <button class="nav-btn active" onclick="show('overview')"><span class="nav-dot"></span>Overview & Rules</button>
+    <button class="nav-btn" onclick="show('daddu')"><span class="nav-dot"></span>Daddu Character Rules</button>
+    <button class="nav-btn" onclick="show('styles')"><span class="nav-dot"></span>8 Thumbnail Styles</button>
+    <button class="nav-btn" onclick="show('master')"><span class="nav-dot"></span>Master Prompt</button>
+    <button class="nav-btn" onclick="show('builder')"><span class="nav-dot"></span>Variation Builder</button>
+    <button class="nav-btn" onclick="show('rotation')"><span class="nav-dot"></span>Rotation Schedule</button>
+    <button class="nav-btn" onclick="show('title')"><span class="nav-dot"></span>Title Prompt</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- PANEL: OVERVIEW -->
+  <div id="overview" class="panel active">
+    <div class="sec-eyebrow">Tab 01</div>
+    <div class="sec-title">How This System Works</div>
+    <div class="sec-desc">The thumbnail system has 8 distinct visual styles that rotate on a fixed schedule. Each style has a completely different layout, color palette, typography mood, and Daddu pose. You send the prompt + Daddu's image to an AI image tool and get your thumbnail concept back.</div>
+
+    <div class="info">
+      <strong>Correct order every video:</strong> Style rotation → Variation Builder → Master Prompt → Add Daddu image → Generate in AI tool → Finalize text in Canva
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-head">
+        <div class="pch-left">
+          <span class="pch-icon">⚡</span>
+          <div>
+            <div class="pch-title">Core Thumbnail Rules — Never Break These</div>
+            <div class="pch-sub">APPLY TO EVERY SINGLE THUMBNAIL</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="cp(this,'core-rules')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-pre" id="core-rules">CORE THUMBNAIL RULES — The Money Frog Channel
+
+COMPOSITION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1] Daddu (the frog character) occupies 35–50% of the thumbnail
+[2] Daddu must ALWAYS be reacting to something — never neutral pose
+[3] One dominant text element only — max 5 words, largest element on screen
+[4] One supporting text element — max 3 words, much smaller
+[5] Never more than 3 visual elements total: Daddu + text + background element
+[6] The eye travels: Text → Daddu's expression → supporting element
+
+TEXT RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[7] Main text must be readable at 120px width (mobile size)
+[8] Never use more than 2 fonts on one thumbnail
+[9] Text must have contrast ratio of at least 4.5:1 against background
+[10] Main text uses thick bold condensed font — never thin fonts
+[11] Key word or number gets a different color from the rest of the text
+[12] Never use all lowercase — looks unprofessional at small size
+
+COLOR RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[13] Each thumbnail uses ONE dominant background color + ONE accent
+[14] Never use more than 3 colors total including text
+[15] Rotate color palette every video — never same palette back to back
+[16] High contrast always wins — dark bg + bright text OR light bg + dark text
+[17] Daddu's green naturally becomes a color element — design around it
+
+DADDU RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18] Daddu's expression must match the video's emotional hook
+[19] Daddu's eyes must be visible and large — this is his most recognizable feature
+[20] Never shrink Daddu below 30% of frame — he IS the brand
+[21] Daddu should be pointing at, reacting to, or interacting with the text
+[22] Never put Daddu in the center — always left or right, slightly off-frame at edges
+
+WHAT TO NEVER DO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✕ Never use the same layout style twice in a row
+✕ Never use same background color as previous video
+✕ Never use a thumbnail without Daddu visible
+✕ Never use light gray backgrounds — too weak on YouTube grid
+✕ Never put important text in corners — YouTube UI covers corners
+✕ Never use stock photo faces — Daddu replaces the human face element
+✕ Never add more than one emoji or graphic element besides Daddu</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: DADDU RULES -->
+  <div id="daddu" class="panel">
+    <div class="sec-eyebrow">Tab 02</div>
+    <div class="sec-title">Daddu Character Rules</div>
+    <div class="sec-desc">Every thumbnail you generate needs Daddu positioned and posed correctly. These rules tell the AI image tool exactly how to use him. Paste these into every prompt you send.</div>
+
+    <div class="daddu-grid">
+      <div class="daddu-card">
+        <div class="dc-icon">😱</div>
+        <div class="dc-title">Shocked / Surprised Pose</div>
+        <div class="dc-body">Use for: Contrarian videos, shocking stats, "you've been doing this wrong" topics.<br><br>Direction: <span class="yes">Eyes wide open, mouth slightly open, one hand raised near face, leaning slightly back, beanie slightly tilted</span><br><span class="no">Never: Closed eyes, calm expression, looking away from camera</span></div>
+      </div>
+      <div class="daddu-card">
+        <div class="dc-icon">🤫</div>
+        <div class="dc-title">Secretive / Insider Pose</div>
+        <div class="dc-body">Use for: "Banks don't want you to know," loophole videos, hidden information topics.<br><br>Direction: <span class="yes">One finger on lips, eyes looking sideways or directly at viewer, slight smirk, leaning forward conspiratorially</span><br><span class="no">Never: Open mouth, surprised look, pointing away</span></div>
+      </div>
+      <div class="daddu-card">
+        <div class="dc-icon">😤</div>
+        <div class="dc-title">Frustrated / Warning Pose</div>
+        <div class="dc-body">Use for: Mistake videos, "stop doing this," warning topics, debt and financial danger content.<br><br>Direction: <span class="yes">Arms crossed or one hand pointing forward at viewer, eyebrows furrowed, serious expression, direct eye contact</span><br><span class="no">Never: Smiling, neutral, looking away</span></div>
+      </div>
+      <div class="daddu-card">
+        <div class="dc-icon">💡</div>
+        <div class="dc-title">Excited / Discovery Pose</div>
+        <div class="dc-body">Use for: "Real Math" reveals, empowerment content, positive financial tips, savings discoveries.<br><br>Direction: <span class="yes">Both hands up or one pointing up, big wide eyes, enthusiastic open expression, slight forward lean</span><br><span class="no">Never: Arms down, flat expression, looking sideways</span></div>
+      </div>
+      <div class="daddu-card">
+        <div class="dc-icon">🤔</div>
+        <div class="dc-title">Thinking / Calculating Pose</div>
+        <div class="dc-body">Use for: Comparison videos, "which is better" content, math-heavy real calculation topics.<br><br>Direction: <span class="yes">One hand on chin, eyes slightly narrowed and looking up-left as if thinking, head tilted slightly, other hand with finger raised</span><br><span class="no">Never: Blank stare, arms at sides, big open expression</span></div>
+      </div>
+      <div class="daddu-card">
+        <div class="dc-icon">😎</div>
+        <div class="dc-title">Confident / Knowing Pose</div>
+        <div class="dc-body">Use for: Age hook videos, "do this immediately," actionable step-by-step content, empowerment closes.<br><br>Direction: <span class="yes">Arms crossed confidently, slight smirk or small smile, direct eye contact, slightly leaning back, beanie perfectly placed</span><br><span class="no">Never: Surprised look, hands in air, frantic energy</span></div>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-head">
+        <div class="pch-left">
+          <span class="pch-icon">🐸</span>
+          <div>
+            <div class="pch-title">Daddu Character Description Block</div>
+            <div class="pch-sub">PASTE THIS INTO EVERY IMAGE GENERATION PROMPT</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="cp(this,'daddu-block')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-pre" id="daddu-block">CHARACTER REFERENCE — DADDU THE FROG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This is Daddu, the mascot of The Money Frog YouTube channel.
+Use the provided reference image as the exact character design.
+
+Character description for consistency:
+- Cartoon-style anthropomorphic frog character
+- Green frog with large expressive eyes — eyes are most important feature
+- Wearing a dark olive/army green knitted beanie hat
+- Wearing large brown lace-up boots
+- Stocky, friendly body — confident posture
+- Art style: semi-realistic cartoon, clean lines, slightly stylized
+
+IMPORTANT rendering rules:
+- Maintain exact character proportions from reference image
+- Beanie and boots must be visible in every thumbnail
+- Eyes must be large, clear, and expressive — never obscured
+- Character should feel 3D and rendered, not flat 2D
+- Drop shadow beneath character to ground him on the thumbnail
+- Character edges should be clean — no blurring into background
+
+Pose for this thumbnail: [INSERT POSE FROM POSE GUIDE]
+Daddu's position: [LEFT SIDE / RIGHT SIDE] of frame
+Daddu size: Approximately [35% / 40% / 50%] of total frame width</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: 8 STYLES -->
+  <div id="styles" class="panel">
+    <div class="sec-eyebrow">Tab 03</div>
+    <div class="sec-title">8 Thumbnail Visual Styles</div>
+    <div class="sec-desc">Rotate through these 8 styles on a fixed schedule. Each has a completely different visual identity — background treatment, text layout, color mood, and Daddu placement. Never use the same style twice in a row.</div>
+
+    <div class="style-grid">
+      <div class="style-card active-style" onclick="selectStyle(this,'s1')">
+        <div class="style-preview sp-a">
+          <div style="font-size:36px">💥</div>
+          <div class="style-preview-label" style="color:#ff4757">STYLE A</div>
+        </div>
+        <div class="style-info">
+          <div class="style-name">The Red Alarm</div>
+          <div class="style-desc">Dark/black background. Dominant red accent. Daddu on LEFT with shocked expression. Bold white main text on right. Red highlight on key number or word.</div>
+          <div class="style-use">→ Best for: Mistake videos, warnings, shocking stats</div>
+        </div>
+      </div>
+      <div class="style-card" onclick="selectStyle(this,'s2')">
+        <div class="style-preview sp-b">
+          <div style="font-size:36px">📊</div>
+          <div class="style-preview-label" style="color:#70b8ff">STYLE B</div>
+        </div>
+        <div class="style-info">
+          <div class="style-name">The Navy Math</div>
+          <div class="style-desc">Deep navy/dark blue background. Gold/yellow accents. Daddu on RIGHT in thinking pose. Main text LEFT side. Subtle chart or number graphic behind text.</div>
+          <div class="style-use">→ Best for: Real Math comparisons, data-driven videos</div>
+        </div>
+      </div>
+      <div class="style-card" onclick="selectStyle(this,'s3')">
+        <div class="style-preview sp-c">
+          <div style="font-size:36px">💰</div>
+          <div class="style-preview-label" style="color:#39ff8f">STYLE C</div>
+        </div>
+        <div class="style-info">
+          <div class="style-name">The Green Machine</div>
+          <div class="style-desc">Very dark green background. Bright neon green accents. Daddu LARGE on right (50% frame). Short punchy text left. Money/wealth visual element behind Daddu.</div>
+          <div class="style-use">→ Best for: Wealth tips, positive finance, empowerment</div>
+        </div>
+      </div>
+      <div class="style-card" onclick="selectStyle(this,'s4')">
+        <div class="style-preview sp-d">
+          <div style="font-size:36px">⚡</div>
+          <div class="style-preview-label" style="color:#ffc94d">STYLE D</div>
+        </div>
+        <div class="style-info">
+          <div class="style-name">The Gold Rush</div>
+          <div class="style-desc">Dark charcoal/black background. Dominant gold/amber accents. Daddu on LEFT in confident pose. BIG dollar number as hero element. Thin subtitle below.</div>
+          <div class="style-use">→ Best for: Income videos, salary comparisons, retirement numbers</div>
+        </div>
+      </div>
+      <div class="style-card" onclick="selectStyle(this,'s5')">
+        <div class="style-preview sp-e">
+          <div style="font-size:36px">🤫</div>
+          <div class="style-preview-label" style="color:#b48eff">STYLE E</div>
+        </div>
+        <div class="style-info">
+          <div class="style-name">The Purple Secret</div>
+          <div class="style-desc">Near-black with deep purple glow. White main text. Daddu in secretive pose RIGHT side. "Shh" or secret visual element on left. Mysterious atmosphere.</div>
+          <div class="style-use">→ Best for: Loopholes, bank secrets, insider knowledge videos</div>
+        </div>
+      </div>
+      <div class="style-card" onclick="selectStyle(this,'s6')">
+        <div class="style-preview sp-f">
+          <div style="font-size:36px">⚖️</div>
+          <div class="style-preview-label" style="color:#00e5ff">STYLE F</div>
+        </div>
+        <div class="style-info">
+          <div class="style-name">The Split Screen</div>
+          <div class="style-desc">Thumbnail split in half — left dark teal, right dark charcoal. VS or arrow between sides. Daddu CENTER pointing left-right. Each side has one label. No secondary text.</div>
+          <div class="style-use">→ Best for: Comparison videos, X vs Y format, debate content</div>
+        </div>
+      </div>
+      <div class="style-card" onclick="selectStyle(this,'s7')">
+        <div class="style-preview sp-g">
+          <div style="font-size:36px">🔥</div>
+          <div class="style-preview-label" style="color:#ff8c42">STYLE G</div>
+        </div>
+        <div class="style-info">
+          <div class="style-name">The Orange Fire</div>
+          <div class="style-desc">Near-black background. Warm orange/amber glow from behind Daddu. Daddu on RIGHT with frustrated/warning pose. Bold white text LEFT. Orange underline on key word.</div>
+          <div class="style-use">→ Best for: "Stop doing this," contrarian warnings, habit videos</div>
+        </div>
+      </div>
+      <div class="style-card" onclick="selectStyle(this,'s8')">
+        <div class="style-preview sp-h">
+          <div style="font-size:36px">📈</div>
+          <div class="style-preview-label" style="color:#ffffff">STYLE H</div>
+        </div>
+        <div class="style-info">
+          <div class="style-name">The Minimal Dark</div>
+          <div class="style-desc">Pure dark background. White text ONLY. Daddu small (30%) in corner. ONE large number dominates. Clean, editorial, premium feel. No extra elements.</div>
+          <div class="style-use">→ Best for: Age hook videos, "X years old" content, net worth topics</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-head">
+        <div class="pch-left">
+          <span class="pch-icon">📋</span>
+          <div>
+            <div class="pch-title">All 8 Style Prompt Blocks</div>
+            <div class="pch-sub">ONE-CLICK COPY FOR EACH STYLE</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="cp(this,'all-styles')">⎘ Copy All</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-pre" id="all-styles">STYLE A — THE RED ALARM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Near-black (#0a0a0a) with subtle dark red vignette at edges
+Accent color: Bright red (#ff3333)
+Daddu: LEFT side, 40% frame width, SHOCKED expression, eyes wide
+Text zone: Right side, 55% of frame
+Main text: Bold condensed white font, 2–4 words max
+Accent word: Highlighted in red — different from rest of text
+Supporting text: Small red text below main, max 3 words
+Special element: Red warning graphic, exclamation, or alert badge near top-right
+Mood: Urgent. Alarming. Stop-scroll energy.
+
+STYLE B — THE NAVY MATH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Deep navy (#0d1b2a) with subtle blue gradient
+Accent color: Gold/amber (#ffc94d)
+Daddu: RIGHT side, 38% frame width, THINKING expression, hand on chin
+Text zone: Left side, 55% of frame
+Main text: Bold white condensed font, 3–5 words
+Key number: Extra large gold color — hero element
+Supporting element: Faint chart or graph lines behind text (subtle, decorative)
+Mood: Analytical. Trustworthy. This channel knows its math.
+
+STYLE C — THE GREEN MACHINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Very dark green (#051a0a) with neon green glow behind Daddu
+Accent color: Neon green (#39ff8f)
+Daddu: RIGHT side, 50% frame width, EXCITED expression, hands up or pointing
+Text zone: Left side, 45% of frame
+Main text: White bold font, 2–4 words, large
+Accent: Neon green highlight on one word or number
+Money element: Subtle dollar signs or money bag icon in background (faded)
+Mood: Wealth. Positivity. You're about to learn something valuable.
+
+STYLE D — THE GOLD RUSH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Dark charcoal (#111111)
+Accent color: Rich gold (#ffd700)
+Daddu: LEFT side, 40% frame width, CONFIDENT expression, arms crossed or smirk
+Text zone: Right side dominates — number is hero
+Hero element: GIANT gold dollar amount or number, center-right
+Main text: White condensed font above or below the number, small
+Supporting: Thin horizontal gold line separating text elements
+Mood: Prestige. Money. This is serious financial content.
+
+STYLE E — THE PURPLE SECRET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Near-black with deep purple glow (#1a0033 at edges)
+Accent color: Bright purple (#b48eff)
+Daddu: RIGHT side, 38% frame width, SECRETIVE expression, finger on lips
+Text zone: Left side
+Main text: White bold font, 3–4 words with "secret" or "hidden" energy
+Accent: Purple glow or underline on key word
+Special element: Lock icon, eye icon, or "classified" style tape across corner
+Mood: Insider knowledge. They don't want you to see this.
+
+STYLE F — THE SPLIT SCREEN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Left half dark teal (#001a1a), Right half dark charcoal (#111111)
+Divider: Vertical line or arrow in center, or Daddu straddling both
+Daddu: CENTER of frame, pointing or gesturing left and right, THINKING pose
+Left text: Option A label — white bold, 1–2 words
+Right text: Option B label — white bold, 1–2 words
+Center element: "VS" or "→" or math comparison symbol
+Main text: Curved or arched above Daddu — the overarching question
+Mood: Fair fight. Let me show you which wins.
+
+STYLE G — THE ORANGE FIRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Very dark (#080808) with warm orange/amber glow radiating from right
+Accent color: Orange (#ff8c42) and amber (#ffb300)
+Daddu: RIGHT side, 42% frame width, FRUSTRATED expression, pointing at viewer
+Text zone: Left side
+Main text: White bold condensed font, 2–4 words
+Warning element: Orange underline, strike-through, or X mark on key word
+Special: Flame or heat shimmer effect at Daddu's feet (subtle)
+Mood: Stop. Listen. This is a warning and you need to hear it.
+
+STYLE H — THE MINIMAL DARK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Pure black or very dark gray (#0d0d0d), zero texture or glow
+Accent color: White only
+Daddu: Bottom-right corner, small (28–30% frame), CONFIDENT pose
+Hero element: ONE very large age or number in pure white — dominates center
+Supporting text: Small clean italic text below the number
+No other elements — radical minimalism
+Mood: Premium. Confident. This channel doesn't need to shout.
+</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: MASTER PROMPT -->
+  <div id="master" class="panel">
+    <div class="sec-eyebrow">Tab 04</div>
+    <div class="sec-title">Master Thumbnail Prompt</div>
+    <div class="sec-desc">This is the full prompt to send to your AI image tool (Midjourney, DALL-E, Adobe Firefly, or Leonardo.ai). Fill all [ ] fields, attach Daddu's reference image, then generate.</div>
+
+    <div class="tags">
+      <span class="tag tg">Midjourney / DALL-E / Firefly</span>
+      <span class="tag tgo">Attach Daddu reference image</span>
+      <span class="tag tb">Fill all [ ] fields first</span>
+      <span class="tag tr">Generate 4 variations minimum</span>
+    </div>
+
+    <div class="info">
+      <strong>Best tool order:</strong> Try <strong>Adobe Firefly</strong> first (best character consistency with reference images). Then <strong>Leonardo.ai</strong> (great for style control). Then <strong>Midjourney</strong> (best quality but less reference-accurate). Always generate at least 4 variations and pick the strongest.
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-head">
+        <div class="pch-left">
+          <span class="pch-icon">🎨</span>
+          <div>
+            <div class="pch-title">Master Thumbnail Generation Prompt</div>
+            <div class="pch-sub">FILL FIELDS → ATTACH DADDU IMAGE → GENERATE</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="cp(this,'master-thumb')">⎘ Copy Prompt</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-pre" id="master-thumb">Create a YouTube thumbnail for a personal finance channel called 
+"The Money Frog." The channel mascot is Daddu — a cartoon frog 
+character shown in the attached reference image.
+
+═══════════════════════════════════════
+VIDEO DETAILS
+═══════════════════════════════════════
+Video topic: [e.g. Renting vs Buying a Home]
+Main text for thumbnail: [e.g. THE REAL MATH]
+Supporting text: [e.g. Nobody Shows You]
+Key number or word to highlight: [e.g. $340,000]
+Emotional hook of video: [e.g. shocking revelation]
+
+═══════════════════════════════════════
+STYLE SELECTION
+═══════════════════════════════════════
+Visual Style: [Insert Style A through H from style guide]
+[Paste the full style block description here]
+
+═══════════════════════════════════════
+CHARACTER — DADDU
+═══════════════════════════════════════
+Use the attached reference image as Daddu's exact design.
+Do not redesign the character — maintain all features exactly.
+
+Daddu specifics for this thumbnail:
+- Pose: [Insert pose from Daddu Pose Guide]
+- Position: [LEFT / RIGHT / CENTER] side of frame
+- Size: [35% / 40% / 50%] of total frame width
+- Daddu's eyes: must be large, clear, and looking toward the text
+- Daddu must have a drop shadow beneath him
+- Beanie and boots must be clearly visible
+
+═══════════════════════════════════════
+TECHNICAL SPECIFICATIONS
+═══════════════════════════════════════
+Dimensions: 1280 x 720 pixels (16:9 YouTube standard)
+Resolution: 72dpi minimum
+Format output: RGB color, high contrast
+File type: PNG with no transparency needed
+
+Text rendering notes:
+- Do NOT render the actual text in the AI image 
+  (AI text is unreliable — leave text zones empty or with 
+  placeholder shapes, add real text in Canva afterward)
+- Instead: leave clear negative space zones where text will go
+- Indicate text zone with a simple colored block or empty area
+
+═══════════════════════════════════════
+QUALITY INSTRUCTIONS
+═══════════════════════════════════════
+- Semi-realistic cartoon rendering style
+- High contrast, vivid but not neon-oversaturated
+- Professional finish — this is a premium finance channel
+- Clean edges on Daddu — no blurring into background
+- The thumbnail must look good at BOTH full size and 120px width
+- Generate 4 variations with slight composition differences
+- Do NOT add watermarks, borders, or YouTube play button overlays
+
+═══════════════════════════════════════
+FINAL CHECK BEFORE GENERATING
+═══════════════════════════════════════
+□ Daddu reference image is attached
+□ Style block is pasted in
+□ Daddu pose matches the video's emotional hook
+□ Text zones are clearly reserved as empty space
+□ Color palette matches selected style
+□ No previous thumbnail's layout is being repeated</pre>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-head">
+        <div class="pch-left">
+          <span class="pch-icon">✏️</span>
+          <div>
+            <div class="pch-title">Canva Text Finalization Prompt</div>
+            <div class="pch-sub">USE AFTER AI GENERATES THE BASE IMAGE</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="cp(this,'canva-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-pre" id="canva-prompt">After generating the base thumbnail image in the AI tool, 
+open it in Canva and add text using these rules:
+
+MAIN TEXT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Font: Bebas Neue OR Montserrat Black (bold, condensed)
+Size: As large as possible while staying in the designated zone
+Color: White with 2px dark stroke/shadow for legibility
+Max words: 4 words (shorter is always better)
+Key word: Change color to match style accent color
+
+SUPPORTING TEXT  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Font: Same family, lighter weight (Bold not Black)
+Size: 40–50% of main text size
+Color: White or accent color
+Max words: 3 words
+Position: Below or beside main text, never above
+
+NUMBER/STAT (if applicable)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Font: Bebas Neue — numbers look best in this font
+Size: LARGEST element on the thumbnail if used
+Color: Gold (#ffd700) or accent color of that style
+Format: Always include $ or % symbol
+
+FINAL EXPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Export at 1280 x 720px
+JPG format, quality 90%+
+File name: [video-topic]-thumbnail-v[number].jpg
+Test: Shrink to 120px wide and check all text is still readable</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: BUILDER -->
+  <div id="builder" class="panel">
+    <div class="sec-eyebrow">Tab 05</div>
+    <div class="sec-title">Thumbnail Variation Builder</div>
+    <div class="sec-desc">Select your variables and generate a ready-to-use thumbnail prompt block. Copy it directly into the Master Prompt.</div>
+
+    <div class="builder">
+      <div class="builder-title">🎛️ Build Your Thumbnail Brief</div>
+      <div class="builder-desc">Select one from each group. The builder generates your complete thumbnail brief to paste into the Master Prompt.</div>
+      <div class="builder-grid">
+        <div class="builder-group">
+          <span class="builder-label">Visual Style</span>
+          <div class="builder-opts">
+            <div class="bopt sel" data-g="style" data-v="Style A — The Red Alarm">A: Red Alarm</div>
+            <div class="bopt" data-g="style" data-v="Style B — The Navy Math">B: Navy Math</div>
+            <div class="bopt" data-g="style" data-v="Style C — The Green Machine">C: Green Machine</div>
+            <div class="bopt" data-g="style" data-v="Style D — The Gold Rush">D: Gold Rush</div>
+            <div class="bopt" data-g="style" data-v="Style E — The Purple Secret">E: Purple Secret</div>
+            <div class="bopt" data-g="style" data-v="Style F — The Split Screen">F: Split Screen</div>
+            <div class="bopt" data-g="style" data-v="Style G — The Orange Fire">G: Orange Fire</div>
+            <div class="bopt" data-g="style" data-v="Style H — The Minimal Dark">H: Minimal Dark</div>
+          </div>
+        </div>
+        <div class="builder-group">
+          <span class="builder-label">Daddu Pose</span>
+          <div class="builder-opts">
+            <div class="bopt sel" data-g="pose" data-v="Shocked/Surprised — eyes wide, mouth open, hands near face">😱 Shocked</div>
+            <div class="bopt" data-g="pose" data-v="Secretive — finger on lips, smirk, looking sideways">🤫 Secretive</div>
+            <div class="bopt" data-g="pose" data-v="Frustrated/Warning — arms crossed or pointing at viewer, furrowed brows">😤 Warning</div>
+            <div class="bopt" data-g="pose" data-v="Excited/Discovery — hands up or pointing up, wide eyes, enthusiastic">💡 Excited</div>
+            <div class="bopt" data-g="pose" data-v="Thinking/Calculating — hand on chin, eyes narrowed, head tilted">🤔 Thinking</div>
+            <div class="bopt" data-g="pose" data-v="Confident — arms crossed, slight smirk, direct eye contact">😎 Confident</div>
+          </div>
+        </div>
+        <div class="builder-group">
+          <span class="builder-label">Daddu Position</span>
+          <div class="builder-opts">
+            <div class="bopt sel" data-g="pos" data-v="LEFT side of frame, text on right">Left Side</div>
+            <div class="bopt" data-g="pos" data-v="RIGHT side of frame, text on left">Right Side</div>
+            <div class="bopt" data-g="pos" data-v="CENTER of frame (only for Split Screen style)">Center (Split)</div>
+          </div>
+        </div>
+        <div class="builder-group">
+          <span class="builder-label">Daddu Size</span>
+          <div class="builder-opts">
+            <div class="bopt" data-g="size" data-v="Small — 28–30% of frame (minimal style only)">Small 30%</div>
+            <div class="bopt sel" data-g="size" data-v="Medium — 38–40% of frame (standard)">Medium 40%</div>
+            <div class="bopt" data-g="size" data-v="Large — 48–50% of frame (character-forward)">Large 50%</div>
+          </div>
+        </div>
+        <div class="builder-group">
+          <span class="builder-label">Video Pillar</span>
+          <div class="builder-opts">
+            <div class="bopt sel" data-g="pillar" data-v="Real Math comparison — use thinking or excited pose">📐 Real Math</div>
+            <div class="bopt" data-g="pillar" data-v="Contrarian take — use shocked or warning pose">⚡ Contrarian</div>
+            <div class="bopt" data-g="pillar" data-v="Age/situation hook — use confident or warning pose">🎯 Age Hook</div>
+            <div class="bopt" data-g="pillar" data-v="List/habits video — use excited or confident pose">📋 List</div>
+          </div>
+        </div>
+        <div class="builder-group">
+          <span class="builder-label">Text Layout</span>
+          <div class="builder-opts">
+            <div class="bopt sel" data-g="text" data-v="Big number hero — number dominates, short text above/below">Big Number</div>
+            <div class="bopt" data-g="text" data-v="Two-line statement — main claim top, supporting bottom">Two Lines</div>
+            <div class="bopt" data-g="text" data-v="Single bold word with subtitle — one word huge, subtitle small">Word + Subtitle</div>
+            <div class="bopt" data-g="text" data-v="Question format — question top, Daddu reacting to answer">Question</div>
+          </div>
+        </div>
+      </div>
+      <button class="build-btn" onclick="buildThumb()">🎨 Generate Thumbnail Brief</button>
+      <div class="build-output" id="thumb-output">
+        <div class="bo-label">THUMBNAIL BRIEF — PASTE INTO MASTER PROMPT</div>
+        <pre class="bo-text" id="thumb-out-text"></pre>
+        <button class="bo-copy" onclick="cpBuild()">⎘ Copy Brief</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: ROTATION -->
+  <div id="rotation" class="panel">
+    <div class="sec-eyebrow">Tab 06</div>
+    <div class="sec-title">Style Rotation Schedule</div>
+    <div class="sec-desc">Follow this exactly. Never use the same style twice in a row. This 8-week rotation means viewers never see two visually identical thumbnails next to each other on your channel page.</div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-head">
+        <div class="pch-left">
+          <span class="pch-icon">🗓️</span>
+          <div>
+            <div class="pch-title">8-Week Style Rotation + Pose Rotation</div>
+            <div class="pch-sub">FOLLOW THIS — ADAPT POSE TO PILLAR TYPE</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="cp(this,'rot-sched')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-pre" id="rot-sched">8-WEEK THUMBNAIL ROTATION SCHEDULE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+         VIDEO 1          VIDEO 2          VIDEO 3
+WEEK 1:  A (Red Alarm)   B (Navy Math)    C (Green Machine)
+WEEK 2:  D (Gold Rush)   E (Purple)       F (Split Screen)
+WEEK 3:  G (Orange Fire) H (Minimal Dark) A (Red Alarm)
+WEEK 4:  B (Navy Math)   C (Green)        D (Gold Rush)
+WEEK 5:  E (Purple)      F (Split Screen) G (Orange Fire)
+WEEK 6:  H (Minimal)     A (Red Alarm)    B (Navy Math)
+WEEK 7:  C (Green)       D (Gold Rush)    E (Purple)
+WEEK 8:  F (Split)       G (Orange Fire)  H (Minimal Dark)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DADDU POSE ROTATION (match to pillar type)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Real Math videos     → Thinking or Excited pose
+Contrarian videos    → Shocked or Warning pose  
+Age Hook videos      → Confident or Warning pose
+List videos          → Excited or Confident pose
+Secret/Loophole      → Secretive pose always
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DADDU POSITION ROTATION (alternate each video)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Video 1 of week  → Daddu LEFT
+Video 2 of week  → Daddu RIGHT  
+Video 3 of week  → Daddu RIGHT or CENTER
+Next week Video 1 → Daddu LEFT again (reset)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ACCENT COLOR NEVER REPEAT RULE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The 8 styles use 8 different accent colors automatically.
+As long as you follow the style rotation, colors rotate too:
+A = Red  →  B = Gold  →  C = Green  →  D = Gold/Amber
+E = Purple  →  F = Teal  →  G = Orange  →  H = White</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: TITLE PROMPT -->
+  <div id="title" class="panel">
+    <div class="sec-eyebrow">Tab 07</div>
+    <div class="sec-title">Title Generation Prompt</div>
+    <div class="sec-desc">Titles are generated AFTER the thumbnail concept is locked. The thumbnail tells you what emotional register you're in — then you write a title that matches that energy. Use this prompt in ChatGPT for fast punchy titles, then verify with Claude for accuracy.</div>
+
+    <div class="info">
+      <strong>Correct order:</strong> Thumbnail style selected → Thumbnail concept brief written → Title generated to match thumbnail energy → Script written to match both
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-head">
+        <div class="pch-left">
+          <span class="pch-icon">📝</span>
+          <div>
+            <div class="pch-title">Title Generation Prompt</div>
+            <div class="pch-sub">USE IN CHATGPT — GENERATE 10 OPTIONS MINIMUM</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="cp(this,'title-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-pre" id="title-prompt">Generate YouTube video titles for a US personal finance channel 
+called "The Money Frog." The channel uses a cartoon frog mascot 
+and targets Americans aged 28–55 who are skeptical of mainstream 
+financial advice and want real math, not motivation.
+
+VIDEO DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Topic: [e.g. Renting vs Buying a Home]
+Content Pillar: [Real Math / Contrarian / Age Hook / List]
+Thumbnail style selected: [e.g. Style F — Split Screen]
+Thumbnail main text: [e.g. RENT vs BUY]
+Core contrarian angle: [e.g. Most people assume buying wins — math says no]
+Target viewer: [e.g. Americans aged 30–45, $60K–$90K income]
+
+GENERATE 10 TITLES using these formulas:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2x Formula A: "[X] vs [Y] — The Real Math Nobody Shows You"
+2x Formula B: "Stop [Doing X] — Here's Why (The Math Will Surprise You)"
+2x Formula C: "[Age] and [Situation]? Do This Immediately"
+2x Formula D: "The [Adjective] [Noun] Mistake [X]% of Americans Make"
+2x Formula E: "Why [Popular Advice] Is Actually [Wrong/A Trap/Costing You]"
+
+TITLE RULES — Every title must follow ALL of these:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1] Maximum 60 characters (YouTube truncates beyond this on mobile)
+[2] Must include at least ONE of: a number, dollar amount, age, or %
+[3] Must create an information gap — viewer needs to watch to get answer
+[4] Never start with: "How to" / "The Ultimate" / "Everything You Need"
+[5] Never use clickbait with no substance behind it
+[6] Must match the thumbnail's emotional energy:
+    Red Alarm style  → urgent, warning titles
+    Navy Math style  → analytical, data-driven titles
+    Green Machine    → empowering, positive titles
+    Gold Rush        → aspirational, money-focused titles
+    Purple Secret    → conspiratorial, insider titles
+    Split Screen     → debate, comparison titles
+    Orange Fire      → warning, contrarian titles
+    Minimal Dark     → serious, premium titles
+
+After all 10 titles, tell me:
+- Your #1 pick and why
+- Which title would have the highest CTR on mobile 
+  (where only 45 characters show before truncation)
+- One way to make the #1 pick even stronger</pre>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-card-head">
+        <div class="pch-left">
+          <span class="pch-icon">🔬</span>
+          <div>
+            <div class="pch-title">Title A/B Test Prompt</div>
+            <div class="pch-sub">USE TO PICK BETWEEN YOUR FINAL 2–3 TITLE OPTIONS</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="cp(this,'ab-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-pre" id="ab-prompt">I have [2/3] title options for a YouTube video. 
+Analyze each one against these criteria and tell me 
+which will perform best on YouTube.
+
+TITLES TO EVALUATE:
+Option A: [paste title]
+Option B: [paste title]
+Option C: [paste title if applicable]
+
+EVALUATE EACH ON:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1] Mobile truncation: Does it still make sense at 45 characters?
+[2] Information gap: Does it force you to click to get the answer?
+[3] Specificity: Does it include a concrete number, age, or dollar amount?
+[4] Emotional trigger: Does it activate fear of loss, curiosity, or identity?
+[5] Search discoverability: Would someone type this into YouTube search?
+[6] Thumbnail match: Does it complement "[thumbnail main text]"?
+[7] Audience match: Does it clearly speak to Americans aged 28–55?
+
+Score each title 1–10 on each criterion.
+Sum the scores.
+Declare a winner with 2 sentences explaining why.
+Then suggest one small word swap in the winning title 
+that could increase its score by 5–10%.</pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.currentTarget.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cp(btn, id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copied!';
+      btn.classList.add('done');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('done'); }, 2000);
+    });
+  }
+
+  function selectStyle(card, id) {
+    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active-style'));
+    card.classList.add('active-style');
+  }
+
+  document.querySelectorAll('.bopt').forEach(opt => {
+    opt.addEventListener('click', function() {
+      const g = this.dataset.g;
+      document.querySelectorAll(`.bopt[data-g="${g}"]`).forEach(o => o.classList.remove('sel'));
+      this.classList.add('sel');
+    });
+  });
+
+  function buildThumb() {
+    const vals = {};
+    document.querySelectorAll('.bopt.sel').forEach(o => { vals[o.dataset.g] = o.dataset.v; });
+    const out = `THUMBNAIL BRIEF — Copy into Master Prompt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Visual Style:      ${vals.style || '—'}
+Daddu Pose:        ${vals.pose || '—'}
+Daddu Position:    ${vals.pos || '—'}
+Daddu Size:        ${vals.size || '—'}
+Video Pillar:      ${vals.pillar || '—'}
+Text Layout:       ${vals.text || '—'}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Instruction for AI tool:
+"Apply ${vals.style}. Place Daddu on the ${vals.pos} using 
+${vals.pose} pose at ${vals.size}. 
+Use ${vals.text} text layout. 
+This is a ${vals.pillar} video — match the energy accordingly."`;
+    document.getElementById('thumb-out-text').textContent = out;
+    document.getElementById('thumb-output').classList.add('show');
+  }
+
+  function cpBuild() {
+    const text = document.getElementById('thumb-out-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.bo-copy');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '⎘ Copy Brief', 2000);
+    });
+  }
+</script>
+</body>
+</html>
