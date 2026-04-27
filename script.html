@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐸 The Money Frog — Prompt Vault</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f0e;
+    --surface: #131614;
+    --card: #181c1a;
+    --card2: #1d2220;
+    --border: #252c29;
+    --green: #00c853;
+    --green-dim: #00a844;
+    --green-glow: rgba(0,200,83,0.08);
+    --green-border: rgba(0,200,83,0.2);
+    --gold: #ffd600;
+    --red: #ff4444;
+    --blue: #4fc3f7;
+    --purple: #ce93d8;
+    --white: #e8ede9;
+    --muted: #5a6b5e;
+    --muted2: #3d4f41;
+    --tag-h: #ff6b6b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    padding: 48px 48px 36px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(0,200,83,0.04) 0%, transparent 100%);
+    z-index: 1;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-frog {
+    font-size: 32px;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .logo-main {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: -0.5px;
+  }
+  .logo-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .header-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    background: var(--green-glow);
+    border: 1px solid var(--green-border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+  .header-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .header-title span { color: var(--green); }
+  .header-desc {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  /* TABS NAV */
+  .tabs-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,15,14,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+  }
+  .tabs {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .tab:hover { color: var(--white); }
+  .tab.active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+  }
+  .tab-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  /* MAIN */
+  main {
+    padding: 40px 48px 80px;
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+  }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* PANEL HEADER */
+  .panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+  .panel-title-wrap {}
+  .panel-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .panel-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.8px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .panel-desc { font-size: 13px; color: var(--muted); max-width: 520px; line-height: 1.6; }
+
+  /* PROMPT BLOCK */
+  .prompt-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    transition: border-color 0.2s;
+  }
+  .prompt-block:hover { border-color: var(--muted2); }
+
+  .prompt-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+  .prompt-block-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .prompt-icon { font-size: 16px; }
+  .prompt-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .prompt-sublabel {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--green-glow);
+    border: 1px solid var(--green-border);
+    border-radius: 6px;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .copy-btn:hover {
+    background: rgba(0,200,83,0.15);
+    border-color: var(--green);
+  }
+  .copy-btn.copied {
+    background: rgba(0,200,83,0.2);
+    color: var(--green);
+  }
+
+  .prompt-body {
+    padding: 20px;
+  }
+  .prompt-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #a8c4ac;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* HIGHLIGHT TOKENS */
+  .prompt-text .hl-bracket { color: var(--gold); }
+  .prompt-text .hl-section { color: var(--green); font-weight: 600; }
+  .prompt-text .hl-rule { color: var(--blue); }
+  .prompt-text .hl-warning { color: var(--red); }
+
+  /* TAGS */
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .tag-green { background: rgba(0,200,83,0.1); color: var(--green); border: 1px solid rgba(0,200,83,0.2); }
+  .tag-gold { background: rgba(255,214,0,0.1); color: var(--gold); border: 1px solid rgba(255,214,0,0.2); }
+  .tag-blue { background: rgba(79,195,247,0.1); color: var(--blue); border: 1px solid rgba(79,195,247,0.2); }
+  .tag-red { background: rgba(255,68,68,0.1); color: var(--red); border: 1px solid rgba(255,68,68,0.2); }
+  .tag-purple { background: rgba(206,147,216,0.1); color: var(--purple); border: 1px solid rgba(206,147,216,0.2); }
+
+  /* INFO CARD */
+  .info-card {
+    background: var(--green-glow);
+    border: 1px solid var(--green-border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #7dbd8a;
+    line-height: 1.6;
+  }
+  .info-card strong { color: var(--green); }
+
+  /* ARCHITECTURE CARDS */
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .arch-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .arch-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    transition: all 0.2s;
+  }
+  .arch-card.a1::before { background: var(--red); }
+  .arch-card.a2::before { background: var(--blue); }
+  .arch-card.a3::before { background: var(--green); }
+  .arch-card.a4::before { background: var(--gold); }
+  .arch-card.a5::before { background: var(--purple); }
+  .arch-card:hover { border-color: var(--muted2); transform: translateY(-2px); }
+  .arch-card.selected { border-color: var(--green); background: var(--card2); }
+  .arch-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .arch-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .arch-pillar {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .arch-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .arch-steps li {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.5;
+  }
+  .arch-steps li::before {
+    content: '→';
+    color: var(--muted2);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ROTATION TABLE */
+  .rot-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .rot-table th {
+    background: var(--card2);
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .rot-table td {
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #8aab8e;
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .rot-table tr:last-child td { border-bottom: none; }
+  .rot-table td:first-child { color: var(--green); font-weight: 600; }
+
+  /* VARIABLE SELECTOR */
+  .var-builder {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .var-builder-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .var-builder-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .var-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .var-group {}
+  .var-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .var-options {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .var-opt {
+    padding: 7px 12px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .var-opt:hover { color: var(--white); border-color: var(--muted2); }
+  .var-opt.selected {
+    background: var(--green-glow);
+    border-color: var(--green-border);
+    color: var(--green);
+  }
+  .generate-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--green);
+    color: #000;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .generate-btn:hover { background: var(--green-dim); }
+
+  .generated-output {
+    display: none;
+    margin-top: 16px;
+    background: var(--card2);
+    border: 1px solid var(--green-border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .generated-output.show { display: block; animation: fadeIn 0.3s ease; }
+  .gen-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .gen-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #a8c4ac;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+  .gen-copy {
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: var(--green-glow);
+    border: 1px solid var(--green-border);
+    border-radius: 6px;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: all 0.15s;
+  }
+  .gen-copy:hover { background: rgba(0,200,83,0.15); }
+
+  /* WORKFLOW STEPS */
+  .workflow {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .wf-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .wf-num {
+    width: 28px; height: 28px;
+    background: var(--green-glow);
+    border: 1px solid var(--green-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .wf-content {}
+  .wf-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+  .wf-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .wf-tool {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(79,195,247,0.1);
+    border: 1px solid rgba(79,195,247,0.2);
+    border-radius: 4px;
+    color: var(--blue);
+    letter-spacing: 1px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--muted2); border-radius: 3px; }
+
+  /* SEARCH */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 24px;
+  }
+  .search-icon { color: var(--muted); font-size: 14px; }
+  .search-input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-size: 13px;
+    font-family: 'Space Grotesk', sans-serif;
+    flex: 1;
+  }
+  .search-input::placeholder { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">
+      <span class="logo-frog">🐸</span>
+      <div class="logo-text">
+        <span class="logo-main">The Money Frog</span>
+        <span class="logo-sub">Prompt Vault v1.0</span>
+      </div>
+    </div>
+    <span class="header-badge">● 7 PROMPTS READY</span>
+  </div>
+  <h1 class="header-title">Script <span>Prompt</span> Vault</h1>
+  <p class="header-desc">Every prompt you need to write, analyze, and vary your scripts. Copy with one click. Built for AI-automated finance content.</p>
+</header>
+
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel('main-prompt')">
+      <span class="tab-dot"></span> Master Script Prompt
+    </button>
+    <button class="tab" onclick="showPanel('transcript')">
+      <span class="tab-dot"></span> Transcript Analysis
+    </button>
+    <button class="tab" onclick="showPanel('architectures')">
+      <span class="tab-dot"></span> 5 Architectures
+    </button>
+    <button class="tab" onclick="showPanel('variation')">
+      <span class="tab-dot"></span> Variation Builder
+    </button>
+    <button class="tab" onclick="showPanel('iteration')">
+      <span class="tab-dot"></span> Iteration Prompts
+    </button>
+    <button class="tab" onclick="showPanel('workflow')">
+      <span class="tab-dot"></span> Full Workflow
+    </button>
+    <button class="tab" onclick="showPanel('openers')">
+      <span class="tab-dot"></span> Opening Lines Bank
+    </button>
+  </div>
+</div>
+
+<main>
+
+  <!-- PANEL 1: MASTER PROMPT -->
+  <div id="main-prompt" class="panel active">
+    <div class="panel-header">
+      <div class="panel-title-wrap">
+        <div class="panel-eyebrow">Prompt 01</div>
+        <div class="panel-title">Master Script Prompt</div>
+        <div class="panel-desc">Your primary prompt. Use this every time. Fill in the [ ] fields before running. Always use Claude for this one.</div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag tag-green">Use with Claude</span>
+      <span class="tag tag-gold">Phase 1 + Phase 2</span>
+      <span class="tag tag-blue">2500–2800 words</span>
+      <span class="tag tag-red">Fill [ ] fields first</span>
+    </div>
+    <div class="info-card">
+      <strong>How to use:</strong> Fill every [ ] field before pasting into Claude. Claude will first complete Phase 1 Research and present findings. Review them, then approve to get the full script in Phase 2. Never skip Phase 1 approval.
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">📋</span>
+          <div>
+            <div class="prompt-label">Master Research + Script Prompt</div>
+            <div class="prompt-sublabel">PASTE INTO CLAUDE → FILL FIELDS → RUN</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'master-prompt-text')">
+          ⎘ Copy Prompt
+        </button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="master-prompt-text">You are a senior script writer and financial content researcher 
+for "The Money Frog" — a US personal finance YouTube channel. 
+Before writing any script, you conduct deep research on the topic.
+
+═══════════════════════════════════════
+CHANNEL IDENTITY
+═══════════════════════════════════════
+Channel name: The Money Frog
+Voice: Direct, confident, slightly contrarian. Like a financially 
+sharp friend who tells you what your financial advisor won't — 
+using real numbers, not opinions.
+Audience: Americans aged 28–55, earning $40K–$150K, feeling 
+behind financially, skeptical of mainstream advice.
+Never preachy. Never vague. Always backed by math.
+
+═══════════════════════════════════════
+VIDEO BRIEF
+═══════════════════════════════════════
+Topic: [e.g. Renting vs Buying a Home]
+Pillar Type: [Real Math / Contrarian / Age Hook / List]
+Target Viewer: [e.g. Americans aged 30–45 earning $60K–$90K]
+Contrarian Angle: [e.g. Most assume buying always wins — 
+                   the 2026 math says otherwise in most cities]
+Competing Titles on YouTube: [paste 3–5 titles you found]
+Target Length: 18–20 minutes (2,500–2,800 words)
+
+
+═══════════════════════════════════════
+RESEARCH CONTEXT FROM COMPETITOR ANALYSIS
+═══════════════════════════════════════
+[Paste Script Brief from Prompt 2 here]
+[Paste second Script Brief here if you have two transcripts]
+
+Now proceed with Phase 1 research, incorporating these 
+insights but building a superior, original version.
+
+═══════════════════════════════════════
+PHASE 1 — RESEARCH (do this before writing a single word)
+═══════════════════════════════════════
+Before writing the script, complete ALL of the following research 
+steps and present your findings in a structured report:
+
+STEP 1 — TOPIC DEEP DIVE
+Research the topic thoroughly. Find and present:
+- The most current data and statistics available on this topic 
+  (cite the source for each stat)
+- 3 commonly believed myths or assumptions about this topic 
+  that the data actually contradicts
+- The single most surprising or counterintuitive fact you found
+- How this topic has changed specifically in 2025–2026 
+  (new rates, new laws, new data)
+
+STEP 2 — FINANCIAL CALCULATIONS
+Run the actual math. Show your full working:
+- Calculate the core comparison this video is built around 
+  (e.g. if renting vs buying — calculate both scenarios over 
+  10 and 30 years with current 2026 interest rates)
+- Calculate for 3 different income levels: 
+  $45K/year, $75K/year, $110K/year
+- Show what the difference amounts to in real dollars 
+  after 10 years and 30 years
+- Identify at which exact income level or situation the 
+  conventional advice breaks down
+
+STEP 3 — AUDIENCE PAIN POINT MAPPING
+Identify the emotional core of this topic:
+- What is the viewer's #1 fear related to this topic?
+- What is the #1 mistake they are currently making?
+- What do they desperately want to hear (but that may not 
+  be true)?
+- What is the honest answer they need to hear even if it's 
+  uncomfortable?
+- Write 3 real-sounding comments someone might leave on 
+  this video (these reveal what resonates most)
+
+STEP 4 — HOOK RESEARCH
+Generate 5 different opening hooks for this video. Each hook:
+- Must be under 4 sentences
+- Must open with a shocking stat, dollar amount, or bold claim
+- Must NOT start with "did you know," "most people," or 
+  "hey guys"
+- Must create an immediate information gap 
+  (viewer needs to keep watching to get the answer)
+- Label each hook: [AGGRESSIVE] [DATA-DRIVEN] [STORY-BASED] 
+  [FEAR-BASED] [CURIOSITY-GAP]
+
+Present all Phase 1 findings. Then ask: 
+"Research complete. Shall I proceed to the script? 
+Or do you want to adjust any angles first?"
+
+═══════════════════════════════════════
+PHASE 2 — SCRIPT WRITING
+═══════════════════════════════════════
+(Only proceed after Phase 1 is reviewed and approved)
+
+Include proper read instructions for ai model for natural voiceover, and i want only script as output no other extra details
+
+Use the strongest hook from Phase 1. Write the full script 
+following this EXACT structure:
+
+[HOOK] — 0:00 to 0:30
+Open with the chosen hook. Short sentences. High energy. 
+No name, no intro, no pleasantries. Drop the viewer into 
+the argument immediately.
+
+[PROBLEM SETUP] — 0:30 to 2:00
+Make it deeply personal. Use the words "you" and "your" 
+constantly. Describe their exact situation as if you already 
+know them. Remove shame — replace it with urgency. 
+End this section with: "So let's actually look at the numbers."
+
+[MAIN CONTENT] — 2:00 to 15:00
+This is where the channel earns its reputation. Rules:
+- Every claim must have a number attached to it
+- Every 3–4 minutes, insert a [VISUAL: specific description 
+  of what should appear on screen]
+- Include at least one moment: "Let me show you what this 
+  means for someone earning $[X]..."
+- Include a "most people assume X — but here's what the 
+  math actually shows" moment
+- At the halfway point, insert a [PATTERN INTERRUPT] — 
+  a surprising statement or stat that re-engages anyone 
+  who is drifting
+- Use [PAUSE] where the narrator should slow down 
+  for emphasis
+
+[CONTRARIAN TWIST] — 15:00 to 17:30
+Introduce the angle that most finance channels skip.
+Structure:
+1. "But here's what almost nobody talks about..."
+2. Present the overlooked factor or counterargument
+3. Show how it changes the math or the decision
+4. Land the nuanced conclusion: not black and white — 
+   "it depends on THIS specific factor"
+
+[ACTIONABLE CLOSE] — 17:30 to END
+Give a numbered step-by-step plan (3–5 steps) the viewer 
+can start this week. Each step must be specific — 
+no vague advice like "start saving." Say exactly where, 
+how much, and why.
+
+End with this exact CTA structure:
+"If this changed how you think about [topic], hit subscribe 
+— because next week we're covering [tease next video topic]. 
+You'll want to see that one."
+
+═══════════════════════════════════════
+FORMATTING RULES
+═══════════════════════════════════════
+- Word count: 2,500–2,800 words (strictly enforced)
+- Reading level: Grade 8 — clear, direct, no jargon 
+  without explanation
+- Sentence length: Mix short punchy sentences (5–8 words) 
+  with medium explanatory ones (15–20 words). 
+  Never exceed 25 words in one sentence.
+- Paragraph length: Maximum 3 sentences per paragraph 
+  in the script
+- Label every section clearly: [HOOK], [SETUP], 
+  [MAIN CONTENT], [TWIST], [CLOSE]
+- Insert [VISUAL: ] tags with specific descriptions 
+  at every calculation or key data point
+- Insert [PAUSE] at every major revelation
+- Bold the single most important sentence in each section</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: TRANSCRIPT ANALYSIS -->
+  <div id="transcript" class="panel">
+    <div class="panel-header">
+      <div class="panel-title-wrap">
+        <div class="panel-eyebrow">Prompt 02</div>
+        <div class="panel-title">Transcript Analysis Prompt</div>
+        <div class="panel-desc">Run this BEFORE writing any script when you have a competitor transcript. Take the Script Brief output and paste it into the Master Prompt.</div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="tag tag-green">Use with Claude</span>
+      <span class="tag tag-gold">Run Before Master Prompt</span>
+      <span class="tag tag-blue">Paste transcript inside</span>
+    </div>
+    <div class="info-card">
+      <strong>How to get transcripts:</strong> Use the free Chrome extension "YouTube Transcript" or go to any YouTube video → click ••• under the video → "Show transcript." For long transcripts paste in chunks and add the chunking instruction below first.
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">🔍</span>
+          <div>
+            <div class="prompt-label">Chunking Instruction (use for long transcripts)</div>
+            <div class="prompt-sublabel">SEND THIS FIRST — BEFORE PASTING TRANSCRIPT</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'chunk-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="chunk-prompt">I am going to paste a competitor transcript in parts. 
+Do not begin analysis until I say "TRANSCRIPT COMPLETE." 
+Just reply "Ready for next section" after each paste.</pre>
+      </div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">📊</span>
+          <div>
+            <div class="prompt-label">Full Transcript Analysis Prompt</div>
+            <div class="prompt-sublabel">PASTE TRANSCRIPT INSIDE → RUN IN CLAUDE</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'transcript-prompt')">⎘ Copy Prompt</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="transcript-prompt">You are a content strategist and research analyst for 
+"The Money Frog" YouTube channel. I am giving you the 
+transcript of a top-performing competitor video on the 
+topic of [TOPIC]. Your job is NOT to copy it — extract 
+every insight so we can make a superior version.
+
+═══════════════════════════════════════
+COMPETITOR TRANSCRIPT
+═══════════════════════════════════════
+[PASTE FULL TRANSCRIPT HERE]
+
+═══════════════════════════════════════
+ANALYSIS TASKS — Complete ALL of these
+═══════════════════════════════════════
+
+TASK 1 — STRUCTURAL BREAKDOWN
+- What was the exact hook? (quote it)
+- How long before getting to real substance?
+- What was the single strongest moment in the whole video?
+- What was the weakest section where viewers likely dropped off?
+- How did it end — was the CTA strong or weak?
+
+TASK 2 — WHAT THEY GOT RIGHT
+List 5 things this video did exceptionally well:
+- Specific lines or phrases that were particularly strong
+- Moments where emotional hook was perfectly timed
+- Data or stats that were especially powerful
+- Pacing decisions that worked
+- Anything clever or unexpected
+
+TASK 3 — WHAT THEY GOT WRONG
+List every gap, weakness, or missed opportunity:
+- Claims made without math or data
+- Viewer questions that went unanswered
+- Topics touched but never explored deeply
+- Moments that went vague when they should be specific
+- Outdated or inaccurate financial figures
+- Contrarian angles available but not taken
+- Sections that were too long or repetitive
+
+TASK 4 — THE SUPERIORITY PLAN
+Complete these sentences:
+"Their video scored well because ___. Our version keeps this because ___."
+"Their biggest weakness was ___. Our version fixes this by ___."
+"They completely missed the angle of ___. We cover this by ___."
+"The most viral moment was ___. We open with a stronger version by ___."
+"A stat they used incompletely was ___. The accurate version is ___."
+
+TASK 5 — EXTRACTED LINES FOR INSPIRATION
+Pull 5–8 lines with strong delivery or structure.
+NOT to copy — for tone and phrasing inspiration only.
+Label each and explain what made it work structurally.
+
+TASK 6 — VIEWER PSYCHOLOGY MAP
+- What fear is this video primarily targeting?
+- What desire is it primarily promising?
+- What is the viewer's emotional state at the START?
+- What is the viewer's emotional state at the END?
+- What single question is this video REALLY answering underneath?
+
+TASK 7 — CONTENT GAP KEYWORDS
+List 8–10 questions or subtopics related to this video NOT covered.
+These become deeper sections in our version or future video ideas.
+
+═══════════════════════════════════════
+FINAL OUTPUT — SCRIPT BRIEF
+═══════════════════════════════════════
+End with a Script Brief — one paragraph to copy directly 
+into the Master Script Prompt [RESEARCH CONTEXT] field:
+- The angle our version takes
+- Key data points to include
+- The one moment that makes our version superior
+- The emotional journey our viewer should go through</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: ARCHITECTURES -->
+  <div id="architectures" class="panel">
+    <div class="panel-header">
+      <div class="panel-title-wrap">
+        <div class="panel-eyebrow">Prompt 03</div>
+        <div class="panel-title">5 Script Architectures</div>
+        <div class="panel-desc">Rotate these to prevent pattern detection. Never use the same architecture twice in a row. Each has a completely different flow, pacing, and opening style.</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <strong>Rotation rule:</strong> Use the rotation schedule at the bottom. Never use the same architecture back-to-back. Add your chosen architecture to the [Architecture] field in the Master Prompt.
+    </div>
+
+    <div class="arch-grid">
+      <div class="arch-card a1">
+        <div class="arch-num">Architecture 01</div>
+        <div class="arch-name">"The Myth Buster"</div>
+        <div class="arch-pillar">Best for: Contrarian Pillar</div>
+        <ul class="arch-steps">
+          <li>Open stating the myth as FACT — no hint you'll destroy it</li>
+          <li>Spend 3 full minutes validating why people believe it</li>
+          <li>Hard pivot: "Except here's the problem with that"</li>
+          <li>Math destruction of the myth</li>
+          <li>Rebuild: what actually works instead</li>
+          <li>Close with the corrected belief as a new mental model</li>
+        </ul>
+      </div>
+      <div class="arch-card a2">
+        <div class="arch-num">Architecture 02</div>
+        <div class="arch-name">"The Story + Math"</div>
+        <div class="arch-pillar">Best for: Age Hook Pillar</div>
+        <ul class="arch-steps">
+          <li>Open with 60-sec fictional but realistic story ("Meet Sarah...")</li>
+          <li>Use Sarah's situation to set up the entire problem</li>
+          <li>Run all math using her specific numbers</li>
+          <li>Midpoint: introduce a second character with opposite choices</li>
+          <li>Reveal what happened to both at age 65</li>
+          <li>Close: "Which path are YOU currently on?"</li>
+        </ul>
+      </div>
+      <div class="arch-card a3">
+        <div class="arch-num">Architecture 03</div>
+        <div class="arch-name">"The Live Calculation"</div>
+        <div class="arch-pillar">Best for: Real Math Pillar</div>
+        <ul class="arch-steps">
+          <li>Open mid-calculation: "I just ran the numbers and..."</li>
+          <li>Walk through math in real time as if discovering it</li>
+          <li>Stop at shocking result: "Wait — look at this number"</li>
+          <li>Rerun with different variables to show range</li>
+          <li>Build a comparison table live</li>
+          <li>Close: "So which scenario are YOU in right now?"</li>
+        </ul>
+      </div>
+      <div class="arch-card a4">
+        <div class="arch-num">Architecture 04</div>
+        <div class="arch-name">"The List With a Twist"</div>
+        <div class="arch-pillar">Best for: List Pillar</div>
+        <ul class="arch-steps">
+          <li>Open by revealing the LAST item first — tease #1 immediately</li>
+          <li>Run through items 10 down to 2</li>
+          <li>Each item: name → cost in dollars → fix in one sentence</li>
+          <li>Build tension toward #1 throughout the video</li>
+          <li>#1 reveal is the contrarian twist nobody expected</li>
+          <li>Close: "How many of these are you guilty of?"</li>
+        </ul>
+      </div>
+      <div class="arch-card a5" style="grid-column: span 2;">
+        <div class="arch-num">Architecture 05</div>
+        <div class="arch-name">"The Debate Format"</div>
+        <div class="arch-pillar">Best for: Real Math / Comparison Pillar</div>
+        <ul class="arch-steps" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;">
+          <li>Open: "I'm going to argue both sides and let the math decide"</li>
+          <li>Spend 5 minutes making strongest case for Option A</li>
+          <li>Spend 5 minutes making strongest case for Option B</li>
+          <li>The math showdown: run numbers for both</li>
+          <li>Declare a winner — but with specific conditions</li>
+          <li>Close: "Which side wins for YOUR situation?"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">🗓️</span>
+          <div>
+            <div class="prompt-label">4-Week Rotation Schedule</div>
+            <div class="prompt-sublabel">FOLLOW THIS — NEVER REPEAT BACK TO BACK</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'rotation-text')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <table class="rot-table" id="rotation-text-table">
+          <thead><tr><th>Week</th><th>Video 1</th><th>Video 2</th><th>Video 3</th></tr></thead>
+          <tbody>
+            <tr><td>Week 1</td><td>Myth Buster</td><td>Live Calculation</td><td>List With Twist</td></tr>
+            <tr><td>Week 2</td><td>Story + Math</td><td>Debate Format</td><td>Myth Buster</td></tr>
+            <tr><td>Week 3</td><td>Live Calculation</td><td>Story + Math</td><td>Debate Format</td></tr>
+            <tr><td>Week 4</td><td>List With Twist</td><td>Myth Buster</td><td>Live Calculation</td></tr>
+          </tbody>
+        </table>
+        <pre id="rotation-text" style="display:none;">Week 1: Myth Buster → Live Calculation → List With Twist
+Week 2: Story + Math → Debate Format → Myth Buster
+Week 3: Live Calculation → Story + Math → Debate Format
+Week 4: List With Twist → Myth Buster → Live Calculation</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: VARIATION BUILDER -->
+  <div id="variation" class="panel">
+    <div class="panel-header">
+      <div class="panel-title-wrap">
+        <div class="panel-eyebrow">Prompt 04</div>
+        <div class="panel-title">Variation Builder</div>
+        <div class="panel-desc">Select one option from each variable below. The builder generates a custom instruction block to paste into your Master Prompt.</div>
+      </div>
+    </div>
+
+    <div class="var-builder">
+      <div class="var-builder-title">🎛️ Select Your Variables for This Video</div>
+      <div class="var-builder-desc">Choose one from each category. These get added to your Master Prompt to ensure every video feels different.</div>
+      <div class="var-grid">
+        <div class="var-group">
+          <span class="var-label">Hook Type</span>
+          <div class="var-options">
+            <div class="var-opt selected" data-group="hook" data-val="Shocking statistic">Shocking Statistic</div>
+            <div class="var-opt" data-group="hook" data-val="Bold controversial claim">Bold Claim</div>
+            <div class="var-opt" data-group="hook" data-val="Short story opening">Story Opening</div>
+            <div class="var-opt" data-group="hook" data-val="Direct question to viewer">Direct Question</div>
+            <div class="var-opt" data-group="hook" data-val="Mid-action (I just found this...)">Mid-Action</div>
+          </div>
+        </div>
+        <div class="var-group">
+          <span class="var-label">Narrator Tone</span>
+          <div class="var-options">
+            <div class="var-opt selected" data-group="tone" data-val="Personal discovery (I found this...)">Discovery</div>
+            <div class="var-opt" data-group="tone" data-val="Teacher (Let me show you...)">Teacher</div>
+            <div class="var-opt" data-group="tone" data-val="Insider (Most channels won't tell you this...)">Insider</div>
+          </div>
+        </div>
+        <div class="var-group">
+          <span class="var-label">Math Style</span>
+          <div class="var-options">
+            <div class="var-opt selected" data-group="math" data-val="Side-by-side comparison table">Comparison Table</div>
+            <div class="var-opt" data-group="math" data-val="Timeline projection (year 1, 5, 10, 30)">Timeline Projection</div>
+            <div class="var-opt" data-group="math" data-val="Per paycheck breakdown">Per Paycheck</div>
+            <div class="var-opt" data-group="math" data-val="Worst case vs best case scenario">Worst vs Best Case</div>
+          </div>
+        </div>
+        <div class="var-group">
+          <span class="var-label">Pattern Interrupt</span>
+          <div class="var-options">
+            <div class="var-opt selected" data-group="interrupt" data-val="A surprising stat that reframes everything before it">Surprising Stat</div>
+            <div class="var-opt" data-group="interrupt" data-val="A short story of someone who got this wrong">Wrong Story</div>
+            <div class="var-opt" data-group="interrupt" data-val="Direct question: pause and think about your situation">Direct Question</div>
+            <div class="var-opt" data-group="interrupt" data-val="A counterintuitive statement that seems wrong at first">Counter Statement</div>
+          </div>
+        </div>
+        <div class="var-group">
+          <span class="var-label">Closing Energy</span>
+          <div class="var-options">
+            <div class="var-opt selected" data-group="close" data-val="Urgency (the longer you wait the more this costs)">Urgency Close</div>
+            <div class="var-opt" data-group="close" data-val="Empowerment (you now know what 90% of people don't)">Empowerment Close</div>
+            <div class="var-opt" data-group="close" data-val="Challenge (try this one thing this week)">Challenge Close</div>
+          </div>
+        </div>
+        <div class="var-group">
+          <span class="var-label">Architecture</span>
+          <div class="var-options">
+            <div class="var-opt selected" data-group="arch" data-val="Myth Buster">Myth Buster</div>
+            <div class="var-opt" data-group="arch" data-val="Story + Math">Story + Math</div>
+            <div class="var-opt" data-group="arch" data-val="Live Calculation">Live Calculation</div>
+            <div class="var-opt" data-group="arch" data-val="List With Twist">List With Twist</div>
+            <div class="var-opt" data-group="arch" data-val="Debate Format">Debate Format</div>
+          </div>
+        </div>
+      </div>
+      <button class="generate-btn" onclick="generateVariation()">⚡ Generate Variation Block</button>
+      <div class="generated-output" id="gen-output">
+        <div class="gen-title">VARIATION BLOCK — PASTE INTO MASTER PROMPT FIELDS</div>
+        <pre class="gen-text" id="gen-text"></pre>
+        <button class="gen-copy" onclick="copyGenerated()">⎘ Copy This Block</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 5: ITERATION PROMPTS -->
+  <div id="iteration" class="panel">
+    <div class="panel-header">
+      <div class="panel-title-wrap">
+        <div class="panel-eyebrow">Prompt 05</div>
+        <div class="panel-title">Iteration & Quality Prompts</div>
+        <div class="panel-desc">Run these AFTER your script is written. Never accept the first draft. These fix the weak spots without rewriting everything.</div>
+      </div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">🔧</span>
+          <div>
+            <div class="prompt-label">Script Quality Check</div>
+            <div class="prompt-sublabel">RUN AFTER EVERY SCRIPT IS GENERATED</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'quality-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="quality-prompt">Read this script back critically. Find and fix ONLY these issues:
+
+1. The 3 most generic or vague sentences — rewrite each one 
+   to include a specific number, dollar amount, or real example
+
+2. Any transition between sections that feels slow or loses energy — 
+   rewrite it as a single punchy sentence that drives forward
+
+3. Whether the hook would make YOU personally click if you saw it 
+   cold as a YouTube thumbnail — if not, rewrite it
+
+4. Any section where the math is explained in words but not shown 
+   as a calculation — add the actual numbers
+
+5. Whether the contrarian twist lands with impact or just trails off — 
+   if it trails off, sharpen the landing line
+
+Rewrite ONLY those specific sections. 
+Keep everything else exactly as written.
+Show me before and after for each change.</pre>
+      </div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">👁️</span>
+          <div>
+            <div class="prompt-label">Visual Cue Tag Prompt</div>
+            <div class="prompt-sublabel">RUN AFTER QUALITY CHECK — BEFORE PRODUCTION</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'visual-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="visual-prompt">Read this script. Add [VISUAL: ] tags throughout wherever a chart, 
+calculation, graph, or on-screen text would help the viewer 
+understand the point.
+
+Be extremely specific with every tag. Do NOT write:
+[VISUAL: chart] — this is useless
+
+DO write:
+[VISUAL: bar chart comparing $500/month invested at 7% vs 10% 
+over 30 years — left bar labeled "Average American" shows $567,000, 
+right bar labeled "10% Return" shows $986,000]
+
+Also add:
+- [LOWER THIRD: key stat] wherever a text overlay should appear
+- [B-ROLL: description] wherever stock footage should play
+- [PAUSE] wherever the narrator should slow for emphasis
+
+Return the full script with all tags inserted.</pre>
+      </div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">🎯</span>
+          <div>
+            <div class="prompt-label">Hook Variations Prompt</div>
+            <div class="prompt-sublabel">USE WITH CHATGPT FOR PUNCHIER HOOKS</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'hook-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="hook-prompt">Give me 7 different opening hooks for a video titled "[TITLE]". 
+
+Rules for every hook:
+- Under 4 sentences total
+- Must start with a shocking stat, dollar amount, or bold claim
+- Must NOT start with: "did you know" / "most people" / "hey guys" / "welcome back"
+- Must create an immediate information gap (viewer needs to keep watching)
+- Must feel like the video has already started — no warmup
+
+Label each hook:
+[AGGRESSIVE] — confrontational, challenges the viewer directly
+[DATA-DRIVEN] — leads with a specific number or statistic  
+[STORY-BASED] — opens with a one-sentence scenario
+[FEAR-BASED] — triggers loss aversion immediately
+[CURIOSITY-GAP] — withholds the answer to create tension
+[CONTRARIAN] — states the opposite of what people expect
+[MID-ACTION] — starts as if the research is already happening
+
+After all 7, tell me which one you think has the highest 
+click-through potential and why in 2 sentences.</pre>
+      </div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">📏</span>
+          <div>
+            <div class="prompt-label">Word Count Fix Prompt</div>
+            <div class="prompt-sublabel">USE IF SCRIPT IS TOO SHORT</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'wordcount-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="wordcount-prompt">This script is currently [X] words. I need it to reach 2,500–2,800 words.
+
+Do NOT pad with repetition or filler phrases.
+
+Expand by adding substance in these specific ways:
+1. Add a second real-world example in the [MAIN CONTENT] section 
+   using a different income level ($45K vs the one already used)
+2. Deepen the [CONTRARIAN TWIST] — add one more layer to the argument 
+   that most people haven't considered
+3. Add one more step to the [ACTIONABLE CLOSE] with a specific 
+   tool or resource the viewer can use this week
+
+Show me the expanded sections only — not the full script again.</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 6: WORKFLOW -->
+  <div id="workflow" class="panel">
+    <div class="panel-header">
+      <div class="panel-title-wrap">
+        <div class="panel-eyebrow">Prompt 06</div>
+        <div class="panel-title">Full Weekly Workflow</div>
+        <div class="panel-desc">The exact order to run every prompt each week for 3–4 videos. Follow this sequence every time.</div>
+      </div>
+    </div>
+
+    <div class="workflow">
+      <div class="wf-step">
+        <div class="wf-num">1</div>
+        <div class="wf-content">
+          <div class="wf-title">Monday — Topic Research & Hook Generation</div>
+          <div class="wf-desc">Pick 3–4 topics for the week. For each topic, find 1–2 top-performing competitor videos on that topic. Get their transcripts. Run the Hook Variations Prompt in ChatGPT for each topic. Pick the strongest hook per video.</div>
+          <span class="wf-tool">TOOL: ChatGPT (Hook Prompt) + YouTube Transcript Extension</span>
+        </div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">2</div>
+        <div class="wf-content">
+          <div class="wf-title">Tuesday — Transcript Analysis</div>
+          <div class="wf-desc">For each video you're writing, paste competitor transcripts into Claude using the Transcript Analysis Prompt. Save the Script Brief output from each. If transcript is long, use the Chunking Instruction first.</div>
+          <span class="wf-tool">TOOL: Claude (Transcript Analysis Prompt)</span>
+        </div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">3</div>
+        <div class="wf-content">
+          <div class="wf-title">Wednesday — Script Generation</div>
+          <div class="wf-desc">Open Variation Builder tab. Select your variables for each video (different ones each time — follow rotation schedule). Fill all [ ] fields in the Master Prompt. Paste Script Briefs from Tuesday into [RESEARCH CONTEXT]. Run Master Prompt in Claude. Review Phase 1, approve, get full script.</div>
+          <span class="wf-tool">TOOL: Claude (Master Script Prompt) + Variation Builder</span>
+        </div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">4</div>
+        <div class="wf-content">
+          <div class="wf-title">Thursday — Script Refinement</div>
+          <div class="wf-desc">Run the Script Quality Check Prompt on each script. Apply fixes. Then run the Visual Cue Tag Prompt to get production-ready [VISUAL:] tags. Run Word Count Fix Prompt if any script is under 2,400 words.</div>
+          <span class="wf-tool">TOOL: Claude (Quality Check + Visual Tag Prompts)</span>
+        </div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">5</div>
+        <div class="wf-content">
+          <div class="wf-title">Friday — Production</div>
+          <div class="wf-desc">Export final scripts as plain text. Generate voiceovers in ElevenLabs. Assemble videos in Pictory or InVideo using [VISUAL:] tags as guidance. Create thumbnails in Canva (rotate between 3 visual styles — never same style twice in a row).</div>
+          <span class="wf-tool">TOOL: ElevenLabs + Pictory/InVideo + Canva</span>
+        </div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-num">6</div>
+        <div class="wf-content">
+          <div class="wf-title">Saturday — Upload & Schedule</div>
+          <div class="wf-desc">Write SEO descriptions using ChatGPT. Add chapters to every video. Schedule uploads for Tuesday, Thursday, and Saturday at 10am EST. Respond to early comments to boost engagement signals in first hour.</div>
+          <span class="wf-tool">TOOL: ChatGPT (SEO) + VidIQ + YouTube Studio</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">📝</span>
+          <div>
+            <div class="prompt-label">SEO Description Prompt</div>
+            <div class="prompt-sublabel">USE IN CHATGPT ON SATURDAY</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'seo-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="seo-prompt">Write a YouTube video description for a finance video titled:
+"[VIDEO TITLE]"
+
+The description must:
+- Open with 2–3 sentences summarizing what the video covers 
+  (include the main keyword naturally in sentence 1)
+- Include a "What you'll learn" section with 4–5 bullet points
+- Include a timestamps section with at least 5 chapters 
+  (estimate based on the title and topic)
+- Include 3–4 relevant call-to-action lines 
+  (subscribe, like, comment question)
+- End with 15–20 SEO hashtags relevant to personal finance, 
+  the specific topic, and US audience
+
+Format it exactly as it would appear in a real YouTube description box.
+Target keyword: [MAIN KEYWORD]
+Secondary keywords: [2–3 related keywords]</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 7: OPENING LINES BANK -->
+  <div id="openers" class="panel">
+    <div class="panel-header">
+      <div class="panel-title-wrap">
+        <div class="panel-eyebrow">Prompt 07</div>
+        <div class="panel-title">Opening Lines Bank</div>
+        <div class="panel-desc">Never use the same opening line twice. Pick one from this bank for each video and paste it into the [Opening Line] field of the Master Prompt. Add new ones as you discover what works.</div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <strong>Rule:</strong> Cross off each line after you use it. Never repeat an opening line — YouTube's pattern recognition picks this up faster than any other repeated element.
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">🎙️</span>
+          <div>
+            <div class="prompt-label">Opening Lines — Rotation Bank</div>
+            <div class="prompt-sublabel">PICK ONE PER VIDEO — NEVER REPEAT</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'openers-text')">⎘ Copy All</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="openers-text">STAT-BASED OPENERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1] "The number is $______. Remember that number. By the end of this video, you'll understand exactly why it changes everything."
+
+[2] "The average American loses $_______ doing this every single year. And the worst part? They think they're being smart."
+
+[3] "$______ is sitting on the table right now. Most people walk right past it because nobody told them it was there."
+
+[4] "In 30 years, the difference between these two decisions is $______. I'm going to show you which one you're currently making."
+
+BOLD CLAIM OPENERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[5] "Nobody is going to tell you this. So I will."
+
+[6] "Everything you've been told about [topic] is technically true. It's also completely misleading."
+
+[7] "The advice that's been repeated for 30 years on this topic is wrong. Not slightly wrong. Mathematically, provably, embarrassingly wrong."
+
+[8] "I need to show you something that changed how I think about money. It took me 3 minutes to understand and I haven't thought about [topic] the same way since."
+
+[9] "Your financial advisor knows this. Your bank definitely knows this. The question is why neither of them has ever told you."
+
+FEAR-BASED OPENERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10] "If you are doing [X], you are losing money right now. Not eventually. Right now, today, this month."
+
+[11] "There is a version of you 20 years from now who made the wrong call on this. I want to make sure you're not that person."
+
+[12] "The mistake I'm about to show you is completely invisible. That's what makes it so expensive."
+
+[13] "Most people don't realize they've made this mistake until it's too late to fix it. You still have time. But not much."
+
+CURIOSITY GAP OPENERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14] "In the next 18 minutes, you're going to realize you've been thinking about [topic] completely backwards."
+
+[15] "There's a rule about [topic] that almost nobody knows. The people who do know it are quietly building wealth because of it."
+
+[16] "Let me ask you something. How much did [topic] actually cost you last year? Not what you think. The real number."
+
+[17] "This is going to feel wrong at first. Stay with me. By the time the math is done, you'll see exactly why this works."
+
+STORY / SCENARIO OPENERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18] "Two people. Same income. Same age. Same starting point. Twenty years later, one of them has $800,000. The other has $140,000. The only difference was this one decision."
+
+[19] "Imagine you're 60 years old, looking back at your 40s. What's the one financial decision you wish someone had explained to you properly? This video is that explanation."
+
+[20] "Someone making $65,000 a year can retire with $1.2 million. Someone making $110,000 a year can retire with $340,000. I'm going to show you exactly how that happens."
+
+MID-ACTION OPENERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[21] "Okay so I just ran the numbers on this and I need to show you what I found. Because I did not expect this result."
+
+[22] "I've been looking at this data for the last two hours and there's something here that almost nobody is talking about."
+
+[23] "I'm going to walk you through this calculation live because I want you to see the exact moment the math changes. It's around minute 8. Watch for it."
+
+[24] "Pull up a calculator if you have one nearby. You're going to want to run your own numbers on this."</pre>
+      </div>
+    </div>
+
+    <div class="prompt-block">
+      <div class="prompt-block-header">
+        <div class="prompt-block-left">
+          <span class="prompt-icon">➕</span>
+          <div>
+            <div class="prompt-label">Generate New Opening Lines</div>
+            <div class="prompt-sublabel">USE IN CHATGPT WHEN BANK RUNS LOW</div>
+          </div>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, 'gen-openers-prompt')">⎘ Copy</button>
+      </div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="gen-openers-prompt">Generate 10 new opening lines for a US personal finance YouTube channel 
+called "The Money Frog."
+
+Rules for every line:
+- Maximum 3 sentences
+- Must NOT start with: "did you know" / "most people" / 
+  "hey guys" / "welcome back" / "today we're going to"
+- Must create immediate tension, curiosity, or urgency
+- Must feel like the video has already started
+- Tone: direct, confident, slightly contrarian — 
+  like a financially sharp friend
+
+Generate 2 lines of each type:
+[STAT-BASED] — leads with a specific dollar amount or %
+[BOLD CLAIM] — states something that challenges a belief
+[FEAR-BASED] — triggers immediate loss aversion
+[CURIOSITY GAP] — withholds the answer to force continuation
+[MID-ACTION] — starts as if already in the middle of research
+
+Do not repeat any opener I've already used. 
+Here are my existing openers: [PASTE YOUR USED ONES HERE]</pre>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // TAB SWITCHING
+  function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.currentTarget.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // COPY PROMPT
+  function copyPrompt(btn, id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const text = el.innerText || el.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // VARIABLE SELECTION
+  document.querySelectorAll('.var-opt').forEach(opt => {
+    opt.addEventListener('click', function() {
+      const group = this.dataset.group;
+      document.querySelectorAll(`.var-opt[data-group="${group}"]`).forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+
+  // GENERATE VARIATION BLOCK
+  function generateVariation() {
+    const vals = {};
+    document.querySelectorAll('.var-opt.selected').forEach(opt => {
+      vals[opt.dataset.group] = opt.dataset.val;
+    });
+    const output = `VARIATION BLOCK — Add these to your Master Prompt fields:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Architecture:     ${vals.arch || 'Not selected'}
+Hook Type:        ${vals.hook || 'Not selected'}
+Narrator Tone:    ${vals.tone || 'Not selected'}
+Math Style:       ${vals.math || 'Not selected'}
+Pattern Interrupt: ${vals.interrupt || 'Not selected'}
+Closing Energy:   ${vals.close || 'Not selected'}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Instruction to add to Master Prompt:
+"Use ${vals.arch} structure. Open with ${vals.hook} hook. 
+Use ${vals.tone} tone throughout. Present all math using 
+${vals.math} format. At the midpoint pattern interrupt, use 
+${vals.interrupt}. Close with ${vals.close} energy."`;
+
+    document.getElementById('gen-text').textContent = output;
+    document.getElementById('gen-output').classList.add('show');
+  }
+
+  // COPY GENERATED BLOCK
+  function copyGenerated() {
+    const text = document.getElementById('gen-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.gen-copy');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '⎘ Copy This Block', 2000);
+    });
+  }
+</script>
+</body>
+</html>
