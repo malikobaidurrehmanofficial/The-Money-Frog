@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐸 The Money Frog — Master Workflow Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0f11;
+  --paper: #f7f5f0;
+  --paper2: #efece5;
+  --paper3: #e5e1d8;
+  --green: #1a6b3c;
+  --green-light: #e8f5ee;
+  --green-mid: #c2e0cd;
+  --gold: #b8860b;
+  --gold-light: #fef9e7;
+  --red: #c0392b;
+  --red-light: #fdf0ee;
+  --blue: #1a3a6b;
+  --blue-light: #e8eef8;
+  --muted: #7a7468;
+  --border: #d4cfc5;
+  --border2: #c4bfb5;
+  --white: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Archivo', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ─── HEADER ─────────────────────────────── */
+.masthead {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 56px 64px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::before {
+  content: '🐸';
+  position: absolute;
+  right: -20px; bottom: -40px;
+  font-size: 280px;
+  opacity: 0.04;
+  pointer-events: none;
+  line-height: 1;
+}
+.mh-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.mh-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mh-frog { font-size: 30px; }
+.mh-brand { font-family: 'Archivo Black', sans-serif; font-size: 17px; color: #7dbb95; letter-spacing: -0.3px; }
+.mh-sub { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #4a5c50; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.mh-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: #7dbb95;
+  border: 1px solid #2a4a34;
+  padding: 5px 13px;
+  border-radius: 2px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.mh-kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: #4a5c50;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.mh-h1 {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 62px;
+  letter-spacing: -2.5px;
+  line-height: 0.95;
+  color: var(--paper);
+  margin-bottom: 20px;
+}
+.mh-h1 span { color: #7dbb95; }
+.mh-desc {
+  font-size: 14px;
+  color: #8a9e92;
+  max-width: 580px;
+  line-height: 1.8;
+  margin-bottom: 36px;
+}
+.mh-stats {
+  display: flex;
+  gap: 40px;
+  border-top: 1px solid #1f2d24;
+  padding-top: 28px;
+}
+.mh-stat { display: flex; flex-direction: column; gap: 3px; }
+.mh-stat-n { font-family: 'Archivo Black', sans-serif; font-size: 32px; color: #7dbb95; letter-spacing: -1px; line-height: 1; }
+.mh-stat-l { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #4a5c50; letter-spacing: 2px; text-transform: uppercase; }
+
+/* ─── PHASE NAVBAR ───────────────────────── */
+.phasenav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ink);
+  border-bottom: 3px solid #7dbb95;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 64px;
+}
+.phasenav::-webkit-scrollbar { display: none; }
+.pnb {
+  padding: 14px 20px;
+  background: none;
+  border: none;
+  color: #4a5c50;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pnb:hover { color: #7dbb95; }
+.pnb.active { color: #7dbb95; border-bottom-color: #7dbb95; }
+.pnb-num {
+  background: #1a2820;
+  color: #4a5c50;
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+.pnb.active .pnb-num { background: #2a4a34; color: #7dbb95; }
+
+/* ─── LAYOUT ─────────────────────────────── */
+main { max-width: 920px; padding: 0 64px 100px; }
+
+/* ─── PANELS ─────────────────────────────── */
+.panel { display: none; padding-top: 48px; }
+.panel.active { display: block; animation: ri 0.25s ease; }
+@keyframes ri { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── PHASE HEADER ───────────────────────── */
+.ph {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 2px solid var(--ink);
+}
+.ph-num {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 80px;
+  color: var(--paper3);
+  line-height: 1;
+  letter-spacing: -3px;
+  flex-shrink: 0;
+  margin-top: -8px;
+}
+.ph-info {}
+.ph-kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.ph-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 34px;
+  letter-spacing: -1px;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.ph-desc { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 520px; }
+
+/* ─── TIMELINE ───────────────────────────── */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+.tl-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 52px;
+  flex-shrink: 0;
+  padding-top: 6px;
+}
+.tl-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 3px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--ink);
+  flex-shrink: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: var(--paper);
+  font-weight: 700;
+}
+.tl-dot.green { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+.tl-dot.gold { background: var(--gold); box-shadow: 0 0 0 2px var(--gold); }
+.tl-dot.red { background: var(--red); box-shadow: 0 0 0 2px var(--red); }
+.tl-line {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+  min-height: 20px;
+  margin-top: 4px;
+}
+.tl-item:last-child .tl-line { display: none; }
+.tl-right { flex: 1; padding: 0 0 32px 20px; }
+
+/* ─── STEP CARD ──────────────────────────── */
+.step {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.step-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--paper2);
+  border-bottom: 1px solid var(--border);
+}
+.step-left { display: flex; align-items: center; gap: 10px; }
+.step-icon { font-size: 16px; }
+.step-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+.step-sub { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+.step-tool {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.tool-claude { background: var(--blue-light); color: var(--blue); border: 1px solid #c0cce0; }
+.tool-gpt { background: #e8f8f0; color: #1a6b4a; border: 1px solid #b8dfc8; }
+.tool-canva { background: #fdf0ff; color: #7a1a8b; border: 1px solid #dcc0e8; }
+.tool-eleven { background: var(--gold-light); color: var(--gold); border: 1px solid #e0d0a0; }
+.tool-manual { background: var(--paper3); color: var(--muted); border: 1px solid var(--border); }
+.tool-ai { background: var(--red-light); color: var(--red); border: 1px solid #e0c0bc; }
+.tool-vidiq { background: #e8f0ff; color: #1a2a8b; border: 1px solid #b8c8e8; }
+
+.step-body { padding: 18px 20px; }
+.step-body p { font-size: 13px; color: #444; line-height: 1.75; margin-bottom: 12px; }
+.step-body p:last-child { margin-bottom: 0; }
+.step-body strong { color: var(--ink); font-weight: 700; }
+
+/* ─── PROMPT BOX ─────────────────────────── */
+.prompt-box {
+  background: var(--ink);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+.pb-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #1a2820;
+  border-bottom: 1px solid #2a3c30;
+}
+.pb-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: #7dbb95;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pb-source {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: #4a5c50;
+  letter-spacing: 1px;
+}
+.pb-copy {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: rgba(125,187,149,0.1);
+  border: 1px solid rgba(125,187,149,0.2);
+  border-radius: 4px;
+  color: #7dbb95;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.pb-copy:hover { background: rgba(125,187,149,0.18); border-color: rgba(125,187,149,0.4); }
+.pb-copy.done { background: rgba(125,187,149,0.25); }
+.pb-text {
+  padding: 16px 18px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  line-height: 1.85;
+  color: #8aab96;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ─── INFO BOXES ─────────────────────────── */
+.callout {
+  display: flex;
+  gap: 14px;
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.callout-text { color: #444; }
+.callout-text strong { font-weight: 700; }
+.co-green { background: var(--green-light); border: 1px solid var(--green-mid); }
+.co-green .callout-text { color: var(--green); }
+.co-green .callout-text strong { color: #0f4a28; }
+.co-gold { background: var(--gold-light); border: 1px solid #e0d090; }
+.co-gold .callout-text { color: #7a5a00; }
+.co-red { background: var(--red-light); border: 1px solid #e8c4c0; }
+.co-red .callout-text { color: var(--red); }
+.co-blue { background: var(--blue-light); border: 1px solid #c0cce0; }
+.co-blue .callout-text { color: var(--blue); }
+.co-neutral { background: var(--paper2); border: 1px solid var(--border); }
+.co-neutral .callout-text { color: var(--muted); }
+
+/* ─── TAGS ───────────────────────────────── */
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 3px 9px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.tg { background: var(--green-light); color: var(--green); border: 1px solid var(--green-mid); }
+.tgo { background: var(--gold-light); color: var(--gold); border: 1px solid #e0d090; }
+.tb { background: var(--blue-light); color: var(--blue); border: 1px solid #c0cce0; }
+.tr { background: var(--red-light); color: var(--red); border: 1px solid #e8c4c0; }
+.tn { background: var(--paper3); color: var(--muted); border: 1px solid var(--border2); }
+
+/* ─── DIVIDER ────────────────────────────── */
+.div { height: 1px; background: var(--border); margin: 28px 0; }
+
+/* ─── CHECKLIST ──────────────────────────── */
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.6;
+}
+.checklist li::before {
+  content: '□';
+  font-size: 14px;
+  color: var(--border2);
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ─── SUMMARY TABLE ──────────────────────── */
+.sum-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px; }
+.sum-table th {
+  background: var(--paper3);
+  padding: 9px 14px;
+  text-align: left;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--border2);
+  font-weight: 400;
+}
+.sum-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: #444;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.sum-table tr:last-child td { border-bottom: none; }
+.sum-table td:first-child { color: var(--ink); font-weight: 700; font-size: 11px; white-space: nowrap; }
+.sum-table td:nth-child(2) { color: var(--green); font-family: 'IBM Plex Mono', monospace; font-size: 10px; white-space: nowrap; }
+
+/* ─── OVERVIEW CARDS ─────────────────────── */
+.ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 32px; }
+.ov-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.ov-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+}
+.ov-card.c1::before { background: var(--green); }
+.ov-card.c2::before { background: var(--gold); }
+.ov-card.c3::before { background: var(--red); }
+.ov-card.c4::before { background: var(--blue); }
+.ov-card.c5::before { background: #7a1a8b; }
+.ov-card.c6::before { background: #1a6b6b; }
+.ov-step {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.ov-name { font-family: 'Archivo Black', sans-serif; font-size: 16px; letter-spacing: -0.3px; color: var(--ink); margin-bottom: 4px; }
+.ov-vault { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--muted); margin-bottom: 8px; }
+.ov-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.ov-prompts {
+  margin-top: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+}
+
+/* ─── SCROLLBAR ──────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--paper2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="mh-top">
+    <div class="mh-logo">
+      <span class="mh-frog">🐸</span>
+      <div>
+        <div class="mh-brand">The Money Frog</div>
+        <div class="mh-sub">Master Workflow Guide v1.0</div>
+      </div>
+    </div>
+    <span class="mh-badge">● Complete Prompt Guide</span>
+  </div>
+  <div class="mh-kicker">Internal Operating Manual</div>
+  <h1 class="mh-h1">Full <span>Workflow</span><br>& Prompt Guide</h1>
+  <p class="mh-desc">Every prompt across all 4 vaults explained in exact order. What each prompt does, when to use it, which tool to run it in, and what you get back. Nothing left out.</p>
+  <div class="mh-stats">
+    <div class="mh-stat"><span class="mh-stat-n">7</span><span class="mh-stat-l">Phases</span></div>
+    <div class="mh-stat"><span class="mh-stat-n">4</span><span class="mh-stat-l">Prompt Vaults</span></div>
+    <div class="mh-stat"><span class="mh-stat-n">28+</span><span class="mh-stat-l">Total Prompts</span></div>
+    <div class="mh-stat"><span class="mh-stat-n">3</span><span class="mh-stat-l">AI Tools Used</span></div>
+  </div>
+</div>
+
+<!-- PHASE NAV -->
+<div class="phasenav">
+  <button class="pnb active" onclick="show('overview')"><span class="pnb-num">00</span>Overview</button>
+  <button class="pnb" onclick="show('phase1')"><span class="pnb-num">01</span>Niche & Topic Research</button>
+  <button class="pnb" onclick="show('phase2')"><span class="pnb-num">02</span>Thumbnail & Title</button>
+  <button class="pnb" onclick="show('phase3')"><span class="pnb-num">03</span>Script Writing</button>
+  <button class="pnb" onclick="show('phase4')"><span class="pnb-num">04</span>Scene Direction</button>
+  <button class="pnb" onclick="show('phase5')"><span class="pnb-num">05</span>Production</button>
+  <button class="pnb" onclick="show('phase6')"><span class="pnb-num">06</span>Upload & SEO</button>
+  <button class="pnb" onclick="show('phase7')"><span class="pnb-num">07</span>Weekly Schedule</button>
+</div>
+
+<main>
+
+<!-- ═══ OVERVIEW ═══════════════════════════════════════ -->
+<div id="overview" class="panel active">
+  <div class="ph">
+    <div class="ph-num">00</div>
+    <div class="ph-info">
+      <div class="ph-kicker">Start Here</div>
+      <div class="ph-title">The Complete Picture</div>
+      <div class="ph-desc">You have 4 prompt vaults. Each vault covers a different part of making a video. This guide tells you exactly when to open each vault, which prompt to use, and in what order — from idea to uploaded video.</div>
+    </div>
+  </div>
+
+  <div class="callout co-green">
+    <span class="callout-icon">📌</span>
+    <div class="callout-text"><strong>The Golden Rule:</strong> Every video follows the same 7-phase sequence. Never skip a phase. Never run Phase 3 before Phase 2. The order matters because each phase feeds the next — your thumbnail informs your title, your title informs your script hook, your script informs your scenes.</div>
+  </div>
+
+  <div class="ov-grid">
+    <div class="ov-card c1">
+      <div class="ov-step">Phase 01</div>
+      <div class="ov-name">Niche & Topic Research</div>
+      <div class="ov-vault">Channel Bible + Niche Research Method</div>
+      <div class="ov-desc">Finding what video to make this week. Using the outlier method, Reddit research, and VidIQ to pick topics that have proven demand.</div>
+      <div class="ov-prompts">→ No AI prompts needed. Manual research phase.</div>
+    </div>
+    <div class="ov-card c2">
+      <div class="ov-step">Phase 02</div>
+      <div class="ov-name">Thumbnail & Title</div>
+      <div class="ov-vault">Thumbnail Prompt Vault</div>
+      <div class="ov-desc">Design the thumbnail concept first. Then write the title to match. Uses the Variation Builder, Master Thumbnail Prompt, and Title Generation Prompt.</div>
+      <div class="ov-prompts">→ 4 prompts: Builder + Master + Title + A/B Test</div>
+    </div>
+    <div class="ov-card c3">
+      <div class="ov-step">Phase 03</div>
+      <div class="ov-name">Script Writing</div>
+      <div class="ov-vault">Script Prompt Vault</div>
+      <div class="ov-desc">Get competitor transcripts → analyze them → generate full 2,500-word script → refine and add visual cue tags. This is your longest phase.</div>
+      <div class="ov-prompts">→ 6 prompts: Chunking + Transcript + Master + Quality + Visual + Word Count</div>
+    </div>
+    <div class="ov-card c4">
+      <div class="ov-step">Phase 04</div>
+      <div class="ov-name">Scene Direction</div>
+      <div class="ov-vault">Scene Prompt Generator</div>
+      <div class="ov-desc">Turn your approved script into one image prompt per 3-second scene. The Master Analysis Prompt handles the entire video in one run.</div>
+      <div class="ov-prompts">→ 2 prompts: Master Analysis + Continue</div>
+    </div>
+    <div class="ov-card c5">
+      <div class="ov-step">Phase 05</div>
+      <div class="ov-name">Production</div>
+      <div class="ov-vault">Scene Prompt Generator (Style Rules Tab)</div>
+      <div class="ov-desc">Generate all frame images in AI tool. Record voiceover in ElevenLabs. Assemble in CapCut/Pictory. Add text in Canva. Export final video.</div>
+      <div class="ov-prompts">→ Fix prompts available for bad AI image outputs</div>
+    </div>
+    <div class="ov-card c6">
+      <div class="ov-step">Phase 06</div>
+      <div class="ov-name">Upload & SEO</div>
+      <div class="ov-vault">Script Prompt Vault (Workflow Tab)</div>
+      <div class="ov-desc">Write SEO description, add chapters, schedule upload. The SEO Description Prompt handles this in 60 seconds.</div>
+      <div class="ov-prompts">→ 1 prompt: SEO Description Prompt</div>
+    </div>
+  </div>
+
+  <div class="callout co-neutral">
+    <span class="callout-icon">🗂️</span>
+    <div class="callout-text"><strong>Your 4 Vault Files:</strong> Script Prompt Vault · Thumbnail Prompt Vault · Scene Prompt Generator · Channel Bible. Keep all 4 open in browser tabs when working. This workflow guide tells you which tab of which vault to open at each step.</div>
+  </div>
+
+  <table class="sum-table">
+    <thead>
+      <tr><th>Phase</th><th>Tool</th><th>Vault to Open</th><th>Output You Get</th><th>Time</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>01 Research</td><td>Manual</td><td>Channel Bible</td><td>Topic + angle confirmed</td><td>30 min</td></tr>
+      <tr><td>02 Thumbnail</td><td>Claude + AI Image</td><td>Thumbnail Vault</td><td>Thumbnail concept + title</td><td>45 min</td></tr>
+      <tr><td>03 Script</td><td>Claude</td><td>Script Vault</td><td>2,500-word production script</td><td>60 min</td></tr>
+      <tr><td>04 Scenes</td><td>Claude</td><td>Scene Generator</td><td>~400 image prompts</td><td>20 min</td></tr>
+      <tr><td>05 Production</td><td>AI Image + ElevenLabs + CapCut</td><td>Scene Generator</td><td>Final video file</td><td>3–4 hrs</td></tr>
+      <tr><td>06 Upload</td><td>ChatGPT + YouTube</td><td>Script Vault</td><td>Live uploaded video</td><td>30 min</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ PHASE 1 ═════════════════════════════════════════ -->
+<div id="phase1" class="panel">
+  <div class="ph">
+    <div class="ph-num">01</div>
+    <div class="ph-info">
+      <div class="ph-kicker">Phase One — Monday Morning</div>
+      <div class="ph-title">Niche & Topic Research</div>
+      <div class="ph-desc">Before any prompt is written, you need a confirmed video topic with proven demand. This phase is mostly manual research — no AI prompts needed yet. Takes 30 minutes maximum.</div>
+    </div>
+  </div>
+
+  <div class="callout co-gold">
+    <span class="callout-icon">📂</span>
+    <div class="callout-text"><strong>Vault to open:</strong> Channel Bible (your channel document HTML file) → Content Master Ideas Table. This is your pre-researched topic bank. Start here before doing any new research.</div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">1</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">📋</span>
+              <div><div class="step-name">Step 1 — Check Your Content Ideas Table First</div><div class="step-sub">Channel Bible → Content Master Ideas Table</div></div>
+            </div>
+            <span class="step-tool tool-manual">Manual</span>
+          </div>
+          <div class="step-body">
+            <p>Open your <strong>Content Master Ideas Table</strong> (the money_frog_content_doc.html file). This table has 54 pre-researched video ideas already sorted by priority — HIGH, MED, and LOW. Start with any idea marked HIGH priority that you haven't filmed yet.</p>
+            <p>Only move to fresh research if you've exhausted all HIGH priority ideas or want to test something new based on current trends.</p>
+            <div class="callout co-green">
+              <span class="callout-icon">✅</span>
+              <div class="callout-text"><strong>Output from this step:</strong> One confirmed video topic with its content pillar (Real Math / Contrarian / Age Hook / List) and a rough contrarian angle already noted in the table.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">2</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🔍</span>
+              <div><div class="step-name">Step 2 — YouTube Search Test</div><div class="step-sub">YouTube search bar → Manual analysis</div></div>
+            </div>
+            <span class="step-tool tool-manual">Manual</span>
+          </div>
+          <div class="step-body">
+            <p>Search your topic 3 different ways on YouTube. For each search look at the top 10 results and note: subscriber counts of channels that appear, view counts vs sub counts, and how recently the videos were posted.</p>
+            <p>You're looking for: <strong>videos with 100K+ views on channels under 50K subs</strong> — that's your signal that demand exceeds supply on this topic.</p>
+            <p>Also collect the <strong>top 3–5 competing video titles</strong> — you'll need these for Phase 2 and Phase 3.</p>
+            <div class="callout co-gold">
+              <span class="callout-icon">📝</span>
+              <div class="callout-text"><strong>Write down:</strong> Topic confirmed · Pillar type · 3–5 competing titles · 1–2 top video URLs to get transcripts from · Your contrarian angle in one sentence</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">3</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">📄</span>
+              <div><div class="step-name">Step 3 — Get Competitor Transcripts</div><div class="step-sub">YouTube Transcript Extension → Copy text</div></div>
+            </div>
+            <span class="step-tool tool-manual">Manual</span>
+          </div>
+          <div class="step-body">
+            <p>Go to the 1–2 top-performing competitor videos on your topic. Install the free Chrome extension <strong>"YouTube Transcript"</strong> or click <strong>••• under the video → Show Transcript</strong>. Copy the full transcript text.</p>
+            <p>Save each transcript in a text file labeled with the video title. You'll paste these into Claude in Phase 3. <strong>Don't run any prompts yet</strong> — just collect the raw text.</p>
+            <div class="callout co-green">
+              <span class="callout-icon">✅</span>
+              <div class="callout-text"><strong>Phase 1 complete when you have:</strong> ① Confirmed topic ② Pillar type ③ Contrarian angle ④ 3–5 competing titles ⑤ 1–2 competitor transcripts saved as text</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PHASE 2 ═════════════════════════════════════════ -->
+<div id="phase2" class="panel">
+  <div class="ph">
+    <div class="ph-num">02</div>
+    <div class="ph-info">
+      <div class="ph-kicker">Phase Two — Monday Afternoon</div>
+      <div class="ph-title">Thumbnail Concept & Title</div>
+      <div class="ph-desc">Design the thumbnail first. Write the title second. This order is critical — the thumbnail tells you what emotional register you're operating in, and the title must match that energy.</div>
+    </div>
+  </div>
+
+  <div class="callout co-gold">
+    <span class="callout-icon">📂</span>
+    <div class="callout-text"><strong>Vault to open:</strong> Thumbnail Prompt Vault (thumbnail_prompt_vault.html). You will use 4 prompts from this vault in this phase. Open it now and keep it open.</div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot gold">1</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🗓️</span>
+              <div><div class="step-name">Prompt 1 — Check Rotation Schedule</div><div class="step-sub">Thumbnail Vault → Tab 6: Rotation Schedule</div></div>
+            </div>
+            <span class="step-tool tool-manual">Manual</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 6 (Rotation Schedule)</strong> in your Thumbnail Vault. Check which style you used last week. Find the next style in the rotation. Write it down — this is your style for this video.</p>
+            <p><strong>Why this matters:</strong> YouTube's algorithm notices when thumbnails look identical across a channel. The rotation ensures every video looks visually distinct on your channel page.</p>
+            <div class="callout co-neutral">
+              <span class="callout-icon">📌</span>
+              <div class="callout-text"><strong>Example:</strong> Last video used Style A (Red Alarm). This video uses Style B (Navy Math). Also check which Daddu pose fits your pillar type from the Pose-to-Pillar matching table on that same tab.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot gold">2</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🎛️</span>
+              <div><div class="step-name">Prompt 2 — Variation Builder</div><div class="step-sub">Thumbnail Vault → Tab 5: Variation Builder</div></div>
+            </div>
+            <span class="step-tool tool-manual">Manual</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 5 (Variation Builder)</strong>. Click one option in each of the 6 variable groups: Visual Style, Daddu Pose, Daddu Position, Daddu Size, Video Pillar, Text Layout.</p>
+            <p>Click <strong>"Generate Thumbnail Brief"</strong>. This produces a ready-to-paste instruction block. Copy it — you'll paste it directly into the Master Thumbnail Prompt in the next step.</p>
+            <div class="callout co-green">
+              <span class="callout-icon">✅</span>
+              <div class="callout-text"><strong>What you get:</strong> A 6-line "Thumbnail Brief" block that tells the AI image tool exactly how to position Daddu, which style to apply, and which text layout to use.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot gold">3</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🎨</span>
+              <div><div class="step-name">Prompt 3 — Master Thumbnail Prompt</div><div class="step-sub">Thumbnail Vault → Tab 4: Master Prompt → AI Image Tool</div></div>
+            </div>
+            <span class="step-tool tool-ai">Adobe Firefly / Leonardo.ai</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 4 (Master Prompt)</strong>. Copy the full Master Thumbnail Generation Prompt. Fill in all [ ] fields:</p>
+            <ul class="checklist">
+              <li>Video topic</li>
+              <li>Main text for thumbnail (3–4 words max)</li>
+              <li>Supporting text (2–3 words)</li>
+              <li>Key number to highlight (if any)</li>
+              <li>Paste your Variation Builder brief into the Style Selection section</li>
+              <li>Daddu pose, position, and size from your brief</li>
+            </ul>
+            <p style="margin-top:12px">Paste the completed prompt into <strong>Adobe Firefly</strong> (first choice) or <strong>Leonardo.ai</strong>. Attach Daddu's reference image. Generate <strong>4 variations minimum</strong>. Pick the strongest one.</p>
+            <div class="callout co-blue">
+              <span class="callout-icon">⚠️</span>
+              <div class="callout-text"><strong>Important:</strong> The AI will NOT render text accurately. The prompt tells it to leave empty space where text goes. You add the real text in Canva using the Canva Text Finalization Prompt (also in Tab 4). Copy that second prompt and follow it in Canva after the image generates.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot gold">4</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">📝</span>
+              <div><div class="step-name">Prompt 4 — Title Generation + A/B Test</div><div class="step-sub">Thumbnail Vault → Tab 7: Title Prompt → ChatGPT</div></div>
+            </div>
+            <span class="step-tool tool-gpt">ChatGPT (GPT-4o)</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 7 (Title Prompt)</strong>. Copy the Title Generation Prompt. Fill in the fields — especially the <strong>thumbnail style selected</strong> field, because the title must match the thumbnail's emotional energy.</p>
+            <p>Paste into <strong>ChatGPT</strong>. It will generate 10 title options using all 5 proven formulas. ChatGPT is better than Claude for fast punchy title variations.</p>
+            <p>If you end up with 2–3 strong options, copy the <strong>Title A/B Test Prompt</strong> (also in Tab 7), paste your finalists into it, and run it in ChatGPT. It scores each title on 7 criteria and declares a winner.</p>
+            <div class="callout co-green">
+              <span class="callout-icon">✅</span>
+              <div class="callout-text"><strong>Phase 2 complete when you have:</strong> ① Finished thumbnail image (with Canva text added) ② One confirmed video title · Keep both saved — you'll need the title in Phase 3.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PHASE 3 ═════════════════════════════════════════ -->
+<div id="phase3" class="panel">
+  <div class="ph">
+    <div class="ph-num">03</div>
+    <div class="ph-info">
+      <div class="ph-kicker">Phase Three — Tuesday</div>
+      <div class="ph-title">Script Writing</div>
+      <div class="ph-desc">The most important phase. Uses 6 different prompts across two stages — competitor analysis first, then script generation. Always run transcript analysis before writing a single word of script.</div>
+    </div>
+  </div>
+
+  <div class="callout co-gold">
+    <span class="callout-icon">📂</span>
+    <div class="callout-text"><strong>Vault to open:</strong> Script Prompt Vault (prompt_vault.html). You will move through tabs 1, 2, 3, 4, and 5 in this phase. Open it now.</div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">1</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">✂️</span>
+              <div><div class="step-name">Prompt 1 — Chunking Instruction (for long transcripts)</div><div class="step-sub">Script Vault → Tab 2: Transcript Analysis → First prompt block</div></div>
+            </div>
+            <span class="step-tool tool-claude">Claude</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 2 (Transcript Analysis)</strong> in the Script Vault. The <strong>first prompt block</strong> is the Chunking Instruction — a short 2-line message you send to Claude <strong>before</strong> pasting any transcript.</p>
+            <p><strong>Why you need it:</strong> If your competitor transcript is longer than 3,000 words (most 20-minute videos are 2,500–3,000+ words), Claude will start analyzing before it's seen the whole thing. The chunking instruction tells Claude to wait until you say "TRANSCRIPT COMPLETE."</p>
+
+            <div class="prompt-box">
+              <div class="pb-head">
+                <span class="pb-label">📋 Chunking Instruction</span>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span class="pb-source">Script Vault → Tab 2 → Block 1</span>
+                  <button class="pb-copy" onclick="cp(this,'chunk-inst')">⎘ Copy</button>
+                </div>
+              </div>
+              <div class="pb-text" id="chunk-inst">I am going to paste a competitor transcript in parts.
+Do not begin analysis until I say "TRANSCRIPT COMPLETE."
+Just reply "Ready for next section" after each paste.</div>
+            </div>
+
+            <p><strong>How to use it:</strong> Send this message first. Claude replies "Ready for next section." Then paste your transcript in chunks of ~2,000 words each. When done, type "TRANSCRIPT COMPLETE" — then Claude runs the full analysis.</p>
+            <p><strong>Skip this prompt if</strong> your transcript is under 2,000 words — just paste the whole thing directly into the Transcript Analysis Prompt.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">2</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🔍</span>
+              <div><div class="step-name">Prompt 2 — Transcript Analysis Prompt</div><div class="step-sub">Script Vault → Tab 2: Transcript Analysis → Second prompt block</div></div>
+            </div>
+            <span class="step-tool tool-claude">Claude</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 2 (Transcript Analysis)</strong>, copy the <strong>Full Transcript Analysis Prompt</strong> (the large second block). Fill in [TOPIC] at the top. Paste the competitor transcript where indicated. Run in Claude.</p>
+            <p><strong>What this prompt does:</strong> Claude reads your competitor's video and produces 7 analysis sections:</p>
+            <ul class="checklist">
+              <li><strong>Task 1:</strong> Full structural breakdown — what was the hook, where did it get weak, how did it end</li>
+              <li><strong>Task 2:</strong> What they did well — specific lines and moments</li>
+              <li><strong>Task 3:</strong> What they got wrong — every gap and missed opportunity</li>
+              <li><strong>Task 4:</strong> The superiority plan — how your version beats theirs</li>
+              <li><strong>Task 5:</strong> Extracted lines for tone inspiration (not copying)</li>
+              <li><strong>Task 6:</strong> Viewer psychology map — what fear and desire the video targets</li>
+              <li><strong>Task 7:</strong> Content gap keywords — topics they missed that you can cover</li>
+            </ul>
+            <p style="margin-top:10px">At the very end Claude outputs a <strong>Script Brief</strong> — a single paragraph summary. <strong>Copy this Script Brief and save it.</strong> You paste it into the Master Script Prompt in the next step.</p>
+            <div class="callout co-blue">
+              <span class="callout-icon">💡</span>
+              <div class="callout-text"><strong>Run this for each competitor transcript.</strong> If you have 2 competitor transcripts, run this twice and save 2 Script Briefs. Both get pasted into the Master Script Prompt.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">3</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🎛️</span>
+              <div><div class="step-name">Prompt 3 — Variation Builder (select your variables)</div><div class="step-sub">Script Vault → Tab 4: Variation Builder</div></div>
+            </div>
+            <span class="step-tool tool-manual">Manual</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 4 (Variation Builder)</strong> in the Script Vault. Select one option from each of the 6 variable groups. This is critical for preventing pattern detection — each video must use a different combination.</p>
+            <p>The 6 variables to select:</p>
+            <ul class="checklist">
+              <li><strong>Hook Type:</strong> Shocking Statistic / Bold Claim / Story Opening / Direct Question / Mid-Action</li>
+              <li><strong>Narrator Tone:</strong> Discovery / Teacher / Insider</li>
+              <li><strong>Math Style:</strong> Comparison Table / Timeline / Per Paycheck / Worst-Best Case</li>
+              <li><strong>Pattern Interrupt:</strong> Surprising Stat / Wrong Story / Direct Question / Counter Statement</li>
+              <li><strong>Closing Energy:</strong> Urgency / Empowerment / Challenge</li>
+              <li><strong>Architecture:</strong> Myth Buster / Story+Math / Live Calculation / List With Twist / Debate Format</li>
+            </ul>
+            <p style="margin-top:10px">Click <strong>"Generate Variation Block"</strong>. Copy the output. You'll paste this into the VIDEO BRIEF section of the Master Script Prompt.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">4</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">📋</span>
+              <div><div class="step-name">Prompt 4 — Master Script Prompt (Phase 1 Research)</div><div class="step-sub">Script Vault → Tab 1: Master Script Prompt → Run in Claude</div></div>
+            </div>
+            <span class="step-tool tool-claude">Claude</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 1 (Master Script Prompt)</strong> — the large main prompt. This is your most important prompt. Fill in every [ ] field:</p>
+            <ul class="checklist">
+              <li>Topic (from Phase 1)</li>
+              <li>Pillar Type (from Phase 1)</li>
+              <li>Architecture (from Variation Builder)</li>
+              <li>Target Viewer age and income</li>
+              <li>Contrarian Angle (one sentence)</li>
+              <li>Competing Titles Found (paste 3–5 titles from Phase 1 research)</li>
+              <li>Hook Type, Narrator Tone, Math Style, Closing Energy (all from Variation Builder)</li>
+              <li>Opening Line (pick one from Tab 7: Opening Lines Bank)</li>
+              <li>Research Context (paste your Script Brief(s) from the transcript analysis here)</li>
+            </ul>
+            <p style="margin-top:10px">Paste the completed prompt into a <strong>fresh Claude conversation</strong>. Claude will run <strong>Phase 1 Research first</strong> — it presents statistics, calculations, audience pain points, and 5 hook options. <strong>Read it carefully.</strong></p>
+            <div class="callout co-red">
+              <span class="callout-icon">⛔</span>
+              <div class="callout-text"><strong>Do not skip Phase 1 review.</strong> Claude will ask "Shall I proceed to the script?" — this is your chance to correct any wrong angles, inaccurate stats, or weak hooks before the script is written. Approve Phase 1 first, then Claude writes the full script.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">5</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🔧</span>
+              <div><div class="step-name">Prompt 5 — Script Quality Check</div><div class="step-sub">Script Vault → Tab 5: Iteration Prompts → First block</div></div>
+            </div>
+            <span class="step-tool tool-claude">Claude</span>
+          </div>
+          <div class="step-body">
+            <p>After Claude outputs the full script, <strong>in the same conversation</strong> copy the <strong>Script Quality Check Prompt</strong> from Tab 5 and send it. Do not open a new chat — Claude needs to see the script it just wrote.</p>
+            <p><strong>What this prompt does:</strong> Claude reads its own script and finds the 3 most generic sentences, any slow transitions, whether the hook would actually make someone click, any math explained in words that should have numbers, and whether the contrarian twist lands with impact.</p>
+            <p>Claude then rewrites <strong>only those weak sections</strong> — not the whole script. It shows you before and after for each change so you can approve or reject the edit.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">6</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">👁️</span>
+              <div><div class="step-name">Prompt 6 — Visual Cue Tag Prompt</div><div class="step-sub">Script Vault → Tab 5: Iteration Prompts → Second block</div></div>
+            </div>
+            <span class="step-tool tool-claude">Claude</span>
+          </div>
+          <div class="step-body">
+            <p>Still in the same Claude conversation, send the <strong>Visual Cue Tag Prompt</strong> (second block in Tab 5). This is the final step before the script goes to production.</p>
+            <p><strong>What this prompt does:</strong> Claude reads the script and inserts [VISUAL: very specific description], [LOWER THIRD: key stat], [B-ROLL: description], and [PAUSE] tags throughout.</p>
+            <p>These tags are what you use in Phase 4 (Scene Direction) to know what image to generate for each moment. The more specific the tags, the better your scene prompts will be.</p>
+            <div class="callout co-gold">
+              <span class="callout-icon">📌</span>
+              <div class="callout-text"><strong>Word Count Check:</strong> If the final script is under 2,400 words, also run the <strong>Word Count Fix Prompt</strong> (fourth block in Tab 5) before adding visual tags. Always check word count first.</div>
+            </div>
+            <div class="callout co-green">
+              <span class="callout-icon">✅</span>
+              <div class="callout-text"><strong>Phase 3 complete when you have:</strong> A 2,500–2,800 word script with all [VISUAL:], [PAUSE], and [LOWER THIRD:] tags inserted. Save as a text file with the video title as the filename.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PHASE 4 ═════════════════════════════════════════ -->
+<div id="phase4" class="panel">
+  <div class="ph">
+    <div class="ph-num">04</div>
+    <div class="ph-info">
+      <div class="ph-kicker">Phase Four — Wednesday Morning</div>
+      <div class="ph-title">Scene Direction</div>
+      <div class="ph-desc">Turn your approved script into one AI image generation prompt per 3-second scene. For a 20-minute video this produces ~400 prompts. The Master Analysis Prompt handles all of them in one run.</div>
+    </div>
+  </div>
+
+  <div class="callout co-gold">
+    <span class="callout-icon">📂</span>
+    <div class="callout-text"><strong>Vault to open:</strong> Scene Prompt Generator (scene_prompt_generator.html). You will use Tab 3 (Master Analysis Prompt) primarily. Have your tagged script text file open and ready to paste.</div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">1</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">📋</span>
+              <div><div class="step-name">Prompt 1 — Master Scene Analysis Prompt</div><div class="step-sub">Scene Generator → Tab 3: Master Analysis Prompt</div></div>
+            </div>
+            <span class="step-tool tool-claude">Claude</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 3 (Master Analysis Prompt)</strong> in the Scene Generator. Copy the large main prompt. Fill in:</p>
+            <ul class="checklist">
+              <li>Video title</li>
+              <li>Video pillar type</li>
+              <li>Total video length in minutes</li>
+              <li>Approximate scenes needed (video minutes × 20 = scene count)</li>
+              <li>Paste your full tagged script into the TRANSCRIPT section</li>
+            </ul>
+            <p style="margin-top:10px">Attach <strong>Daddu's reference image</strong> to the Claude message. Paste the completed prompt. Claude will begin outputting scene prompts in this exact format:</p>
+            <div class="prompt-box">
+              <div class="pb-head">
+                <span class="pb-label">📋 Output Format (what Claude produces)</span>
+              </div>
+              <div class="pb-text">[SCENE 001 | 0:00–0:03]
+Script: "Your savings account is lying to you."
+Type: TYPE 1 — Daddu Presenter
+Daddu: YES — SHOCKED | LEFT
+PROMPT: Flat 2D illustration, pure white background...
+
+[SCENE 002 | 0:03–0:06]
+Script: "The average HYSA pays 4.8 percent right now."
+Type: TYPE 4 — Number/Stat Hero
+Daddu: NO
+PROMPT: Flat 2D illustration, pure white background...</div>
+            </div>
+            <div class="callout co-blue">
+              <span class="callout-icon">💡</span>
+              <div class="callout-text"><strong>For long videos:</strong> Claude outputs in batches of ~50 scenes then pauses. When it stops, use the Continue Prompt (second block in Tab 3) to get the next batch. Keep going until all scenes are output.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">2</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">➕</span>
+              <div><div class="step-name">Prompt 2 — Continue Prompt</div><div class="step-sub">Scene Generator → Tab 3: Master Analysis → Second block</div></div>
+            </div>
+            <span class="step-tool tool-claude">Claude</span>
+          </div>
+          <div class="step-body">
+            <p>When Claude stops outputting mid-video, copy the <strong>Continue Prompt</strong> (second small block in Tab 3). Fill in the last scene number Claude outputted, then send it. Claude resumes from exactly where it left off.</p>
+            <div class="prompt-box">
+              <div class="pb-head">
+                <span class="pb-label">📋 Continue Prompt</span>
+                <button class="pb-copy" onclick="cp(this,'cont-p2')">⎘ Copy</button>
+              </div>
+              <div class="pb-text" id="cont-p2">Continue from Scene {LAST SCENE NUMBER + 1}.
+Maintain all formatting rules.
+Output the next batch of scenes in the same format.
+One blank line between each scene block.
+Label this batch: "BATCH {N} (Scenes {start}–{end})"</div>
+            </div>
+            <p>Repeat until all scenes are generated. When done, copy all scene prompt batches into one text file. Each PROMPT field is what you feed into your image generation tool in Phase 5.</p>
+            <div class="callout co-green">
+              <span class="callout-icon">✅</span>
+              <div class="callout-text"><strong>Phase 4 complete when you have:</strong> All scene prompts in one text file, enter-separated, covering the full video length. Each prompt begins with "Flat 2D illustration, pure white background..."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">3</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">⚡</span>
+              <div><div class="step-name">Bonus — Quick Scene Generator (for manual overrides)</div><div class="step-sub">Scene Generator → Tab 4: Quick Scene Generator</div></div>
+            </div>
+            <span class="step-tool tool-manual">Manual Override</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 4 (Quick Scene Generator)</strong> when you need to regenerate a single scene — for example when an AI image came out wrong and you want a slightly different prompt for that specific scene.</p>
+            <p>Paste the 3-second script words, select the scene type, pose, position, accent color, and click Generate. It builds the full prompt for that one scene instantly without running the whole analysis again.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PHASE 5 ═════════════════════════════════════════ -->
+<div id="phase5" class="panel">
+  <div class="ph">
+    <div class="ph-num">05</div>
+    <div class="ph-info">
+      <div class="ph-kicker">Phase Five — Wednesday to Thursday</div>
+      <div class="ph-title">Production</div>
+      <div class="ph-desc">Generate all images, record voiceover, assemble the video. This is the longest phase in hours but the shortest in actual decisions — the prompts have done the thinking. You're executing now.</div>
+    </div>
+  </div>
+
+  <div class="callout co-gold">
+    <span class="callout-icon">📂</span>
+    <div class="callout-text"><strong>Vault to open:</strong> Scene Prompt Generator → Tab 6 (Style Rules) for image fix prompts if needed. Everything else in this phase is external tools.</div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">1</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🖼️</span>
+              <div><div class="step-name">Step 1 — Batch Generate All Frame Images</div><div class="step-sub">Leonardo.ai or Adobe Firefly → Batch mode</div></div>
+            </div>
+            <span class="step-tool tool-ai">Leonardo.ai / Firefly</span>
+          </div>
+          <div class="step-body">
+            <p>Take your scene prompts text file from Phase 4. Extract only the <strong>PROMPT: field</strong> from each scene block. Paste these into Leonardo.ai's batch generation feature or run them through Adobe Firefly.</p>
+            <p>Generate all images. Download as a numbered batch matching your scene numbers. Name them: scene_001.png, scene_002.png, etc.</p>
+            <p>For scenes where Daddu appears, attach his reference image to those specific prompts in Firefly for best character consistency.</p>
+            <div class="callout co-red">
+              <span class="callout-icon">⚠️</span>
+              <div class="callout-text"><strong>If images come out wrong:</strong> Open Scene Generator → Tab 6 (Style Rules) → "Prompt Fix" section. It lists the 7 most common AI image errors with exact fix lines to add to your prompt. Regenerate those specific scenes only.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">2</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🎙️</span>
+              <div><div class="step-name">Step 2 — Generate AI Voiceover</div><div class="step-sub">ElevenLabs → Your saved voice profile</div></div>
+            </div>
+            <span class="step-tool tool-eleven">ElevenLabs</span>
+          </div>
+          <div class="step-body">
+            <p>Take your final script text (without the [VISUAL:] and [PAUSE] tags — just the spoken words). Paste into <strong>ElevenLabs</strong>. Use your saved voice profile for consistency across all videos.</p>
+            <p>Settings to use: <strong>Stability 55–65%, Clarity 75%, Style 40%</strong>. These produce a natural-sounding finance narrator pace — not robotic, not overly expressive.</p>
+            <p>Export as MP3. The [PAUSE] tags you added in Phase 3 tell you where to manually add silence in your audio editor — add 0.5–1 second of silence at each [PAUSE] marker.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">3</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">🎬</span>
+              <div><div class="step-name">Step 3 — Assemble Video</div><div class="step-sub">CapCut / Pictory / DaVinci Resolve</div></div>
+            </div>
+            <span class="step-tool tool-canva">CapCut / Pictory</span>
+          </div>
+          <div class="step-body">
+            <p>Import all numbered scene images into your video editor. Each image = exactly 3 seconds on the timeline. Import your ElevenLabs voiceover track and sync it with the image sequence.</p>
+            <p>Use <strong>cut transitions only</strong> — no dissolves, no fades between scenes. This matches your competitor's style exactly. Hard cuts between frames maintain the fast-paced educational feel.</p>
+            <p>Add background music at 8–12% volume — low enough to not interfere with the voice. Use royalty-free finance/corporate tracks from Pixabay or EpidemicSound.</p>
+            <p>Export at: <strong>1920×1080, 30fps, H.264, high bitrate (8–10 Mbps minimum)</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PHASE 6 ═════════════════════════════════════════ -->
+<div id="phase6" class="panel">
+  <div class="ph">
+    <div class="ph-num">06</div>
+    <div class="ph-info">
+      <div class="ph-kicker">Phase Six — Friday</div>
+      <div class="ph-title">Upload & SEO</div>
+      <div class="ph-desc">The final phase. One AI prompt handles the entire SEO description. Then schedule and go. Takes 30 minutes maximum if everything from previous phases is ready.</div>
+    </div>
+  </div>
+
+  <div class="callout co-gold">
+    <span class="callout-icon">📂</span>
+    <div class="callout-text"><strong>Vault to open:</strong> Script Prompt Vault → Tab 6 (Full Workflow). The SEO Description Prompt is the last block on that tab.</div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">1</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">📝</span>
+              <div><div class="step-name">Prompt 1 — SEO Description Prompt</div><div class="step-sub">Script Vault → Tab 6: Full Workflow → Last prompt block</div></div>
+            </div>
+            <span class="step-tool tool-gpt">ChatGPT</span>
+          </div>
+          <div class="step-body">
+            <p>Open <strong>Tab 6 (Full Workflow)</strong> in the Script Vault. Scroll to the bottom — the last prompt block is the <strong>SEO Description Prompt</strong>. Copy it. Fill in:</p>
+            <ul class="checklist">
+              <li>Video title (your confirmed title from Phase 2)</li>
+              <li>Main keyword (the core topic — e.g. "renting vs buying")</li>
+              <li>Secondary keywords (2–3 related terms — e.g. "home ownership 2026, rent or buy calculator, housing market")</li>
+            </ul>
+            <p style="margin-top:10px">Paste into <strong>ChatGPT</strong>. It outputs a complete YouTube description including opening summary, "What you'll learn" bullets, timestamps/chapters, CTAs, and 15–20 hashtags — formatted exactly for the YouTube description box.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot green">2</div><div class="tl-line"></div></div>
+      <div class="tl-right">
+        <div class="step">
+          <div class="step-head">
+            <div class="step-left"><span class="step-icon">📊</span>
+              <div><div class="step-name">Step 2 — VidIQ Tags + Upload Settings</div><div class="step-sub">VidIQ → YouTube Studio</div></div>
+            </div>
+            <span class="step-tool tool-vidiq">VidIQ</span>
+          </div>
+          <div class="step-body">
+            <p>In <strong>VidIQ</strong>, search your main keyword. Copy the top 10–15 suggested tags it shows. Add these to your YouTube tags field when uploading.</p>
+            <p>Upload checklist before hitting publish:</p>
+            <ul class="checklist">
+              <li>Title added (from Phase 2)</li>
+              <li>Thumbnail uploaded (from Phase 2 — the Canva-finished version)</li>
+              <li>Description pasted (from SEO Description Prompt)</li>
+              <li>Tags added (from VidIQ)</li>
+              <li>Chapters added (from the timestamps in your description)</li>
+              <li>Category set to: Education</li>
+              <li>Language set to: English (United States)</li>
+              <li>Schedule for: Tuesday, Thursday, or Saturday at 10am EST</li>
+            </ul>
+            <div class="callout co-green">
+              <span class="callout-icon">✅</span>
+              <div class="callout-text"><strong>After uploading:</strong> Check back in 60 minutes and reply to the first 3–5 comments. This engagement signal in the first hour tells YouTube's algorithm the video is active and worth pushing.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PHASE 7 ═════════════════════════════════════════ -->
+<div id="phase7" class="panel">
+  <div class="ph">
+    <div class="ph-num">07</div>
+    <div class="ph-info">
+      <div class="ph-kicker">The Full Picture</div>
+      <div class="ph-title">Weekly Production Schedule</div>
+      <div class="ph-desc">Everything mapped to days of the week for 3 videos per week. This schedule assumes you start Monday morning and upload Tuesday, Thursday, and Saturday.</div>
+    </div>
+  </div>
+
+  <div class="step" style="margin-bottom:24px">
+    <div class="step-head">
+      <div class="step-left"><span class="step-icon">📅</span>
+        <div><div class="step-name">Full Week at a Glance</div><div class="step-sub">3 videos per week production cycle</div></div>
+      </div>
+      <button class="pb-copy" style="margin:0" onclick="cp(this,'week-sched')">⎘ Copy Schedule</button>
+    </div>
+    <div class="step-body">
+      <pre id="week-sched" style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.9;color:#444;white-space:pre-wrap;">MONDAY — Research & Thumbnails (All 3 Videos)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AM: Phase 1 for all 3 videos
+    → Check Content Master Ideas Table
+    → YouTube search test for each topic
+    → Get competitor transcripts (save as text files)
+    → Write down: topic, pillar, contrarian angle, competing titles
+
+PM: Phase 2 for all 3 videos
+    → Thumbnail Vault: check rotation schedule
+    → Thumbnail Vault → Variation Builder → generate brief
+    → Master Thumbnail Prompt → generate in AI image tool
+    → Canva: add text to thumbnail
+    → Title Generation Prompt in ChatGPT → A/B Test if needed
+    → Save: 3 thumbnails + 3 titles
+
+TUESDAY — Scripts (All 3 Videos)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AM: Script Vault → Transcript Analysis (Prompt 1 + 2)
+    → Chunking Instruction if transcript is long
+    → Full Transcript Analysis Prompt → save Script Brief
+    → Repeat for each competitor transcript
+
+MID: Script Vault → Variation Builder (Prompt 3)
+     → Select different variables for each of 3 videos
+     → Generate 3 different Variation Blocks
+
+PM: Script Vault → Master Script Prompt (Prompt 4)
+    → Fill all fields for Video 1 → run in Claude
+    → Approve Phase 1 Research → get full script
+    → Quality Check Prompt → Visual Cue Tags Prompt
+    → Repeat for Video 2 and Video 3
+    → Save 3 tagged scripts as text files
+
+UPLOAD VIDEO 1 — Tuesday 10am EST
+    → SEO Description Prompt → VidIQ tags → Upload
+
+WEDNESDAY — Scene Direction (All 3 Videos)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ALL DAY: Scene Generator → Master Analysis Prompt
+    → Run for Video 1 script → Continue until all scenes done
+    → Repeat for Video 2 and Video 3
+    → Compile all scene prompts into 3 text files
+
+UPLOAD VIDEO 2 — Thursday 10am EST
+    → SEO Description Prompt → VidIQ tags → Upload
+
+THURSDAY–FRIDAY — Production (All 3 Videos)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THU AM: Extract PROMPT fields from scene files
+        Batch generate all images in Leonardo.ai / Firefly
+        Fix any bad outputs using Style Rules fix prompts
+
+THU PM: ElevenLabs voiceover for all 3 videos
+        Add silence at [PAUSE] markers
+
+FRI AM: CapCut / Pictory assembly for all 3 videos
+        Add background music
+        Export at 1920×1080 30fps
+
+FRI PM: Upload Video 2 and Video 3 (schedule for Sat)
+        SEO descriptions, thumbnails, tags, chapters
+
+SATURDAY 10am EST — Scheduled upload (Video 3)
+    → Reply to early comments on Videos 1 and 2
+    → Check analytics on Video 1 (24-hour data)</pre>
+    </div>
+  </div>
+
+  <div class="callout co-green">
+    <span class="callout-icon">💡</span>
+    <div class="callout-text"><strong>Time per video once the system is running:</strong> Research 30min · Thumbnail+Title 45min · Script 60min · Scenes 20min · Production 90min · Upload 30min = approximately <strong>4.5 hours per video</strong> total prompt and production time. The rest is waiting for AI tools to generate.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head">
+      <div class="step-left"><span class="step-icon">🗂️</span>
+        <div><div class="step-name">Quick Prompt Reference — Every Prompt In Order</div><div class="step-sub">The complete list of all prompts used each week</div></div>
+      </div>
+      <button class="pb-copy" style="margin:0" onclick="cp(this,'prompt-ref')">⎘ Copy</button>
+    </div>
+    <div class="step-body">
+      <pre id="prompt-ref" style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.95;color:#444;white-space:pre-wrap;">PHASE 2 — THUMBNAIL & TITLE (Thumbnail Vault)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+P2.1  Rotation Schedule check          → Tab 6 (manual)
+P2.2  Variation Builder                → Tab 5 → Click generate
+P2.3  Master Thumbnail Prompt          → Tab 4 → AI Image Tool
+P2.4  Canva Text Finalization Prompt   → Tab 4 → Canva
+P2.5  Title Generation Prompt          → Tab 7 → ChatGPT
+P2.6  Title A/B Test Prompt            → Tab 7 → ChatGPT (if needed)
+
+PHASE 3 — SCRIPT WRITING (Script Vault)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+P3.1  Chunking Instruction             → Tab 2 → Claude (if transcript long)
+P3.2  Transcript Analysis Prompt       → Tab 2 → Claude
+P3.3  Variation Builder                → Tab 4 → Click generate
+P3.4  Master Script Prompt             → Tab 1 → Claude
+P3.5  Script Quality Check Prompt      → Tab 5 → Claude (same convo)
+P3.6  Visual Cue Tag Prompt            → Tab 5 → Claude (same convo)
+P3.7  Word Count Fix Prompt            → Tab 5 → Claude (if under 2,400 words)
+P3.8  Hook Variations Prompt           → Tab 5 → ChatGPT (optional)
+
+PHASE 4 — SCENE DIRECTION (Scene Generator)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+P4.1  Master Scene Analysis Prompt     → Tab 3 → Claude
+P4.2  Continue Prompt                  → Tab 3 → Claude (repeat until done)
+P4.3  Quick Scene Generator            → Tab 4 (manual overrides only)
+
+PHASE 5 — PRODUCTION (Scene Generator Style Rules)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+P5.1  Prompt Fix prompts               → Tab 6 → AI Image Tool (if needed)
+
+PHASE 6 — UPLOAD & SEO (Script Vault)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+P6.1  SEO Description Prompt           → Tab 6 → ChatGPT
+
+TOTAL PROMPTS RUN PER VIDEO: 10–14 depending on iterations</pre>
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pnb').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cp(btn, id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copied';
+    btn.classList.add('done');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('done'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
