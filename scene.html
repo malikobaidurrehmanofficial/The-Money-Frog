@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐸 The Money Frog — Scene Prompt Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0c0e;
+    --s1: #111316;
+    --s2: #161a1f;
+    --s3: #1c2128;
+    --border: #1f2530;
+    --border2: #28303d;
+    --green: #4ade80;
+    --green-d: rgba(74,222,128,0.08);
+    --green-b: rgba(74,222,128,0.18);
+    --gold: #fbbf24;
+    --gold-d: rgba(251,191,36,0.08);
+    --red: #f87171;
+    --blue: #60a5fa;
+    --purple: #a78bfa;
+    --white: #e2e8f0;
+    --muted: #475569;
+    --muted2: #334155;
+    --text: #94a3b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--white); font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  .hdr {
+    padding: 40px 48px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(74,222,128,0.03) 0%, transparent 55%);
+  }
+  .hdr-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo span { font-size: 26px; }
+  .logo-text .ln { font-size: 17px; font-weight: 800; color: var(--green); letter-spacing: -0.3px; }
+  .logo-text .ls { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .pill { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--green); background: var(--green-d); border: 1px solid var(--green-b); padding: 5px 12px; border-radius: 20px; letter-spacing: 1px; }
+  .hdr h1 { font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: var(--white); margin-bottom: 8px; line-height: 1; }
+  .hdr h1 em { color: var(--green); font-style: normal; }
+  .hdr p { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 600px; }
+
+  /* NAV */
+  .nav { position: sticky; top: 0; z-index: 99; background: rgba(11,12,14,0.97); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); display: flex; padding: 0 48px; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nb { padding: 13px 16px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; gap: 6px; transition: all 0.15s; }
+  .nb:hover { color: var(--text); }
+  .nb.on { color: var(--green); border-bottom-color: var(--green); }
+  .nb-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+
+  /* LAYOUT */
+  .wrap { padding: 36px 48px 80px; max-width: 1060px; }
+  .panel { display: none; }
+  .panel.on { display: block; animation: fu 0.22s ease; }
+  @keyframes fu { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* TYPOGRAPHY */
+  .ey { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 3px; color: var(--green); text-transform: uppercase; margin-bottom: 5px; }
+  .st { font-size: 26px; font-weight: 800; letter-spacing: -0.7px; color: var(--white); margin-bottom: 5px; }
+  .sd { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 540px; margin-bottom: 24px; }
+
+  /* INFO */
+  .info { background: var(--green-d); border: 1px solid var(--green-b); border-radius: 10px; padding: 13px 18px; font-size: 12px; color: #6dbb8a; line-height: 1.6; margin-bottom: 20px; }
+  .info strong { color: var(--green); }
+
+  /* CARD */
+  .card { background: var(--s1); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 18px; }
+  .card:hover { border-color: var(--border2); }
+  .card-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: var(--s2); border-bottom: 1px solid var(--border); }
+  .chl { display: flex; align-items: center; gap: 9px; }
+  .ch-icon { font-size: 14px; }
+  .ch-title { font-size: 13px; font-weight: 700; color: var(--white); }
+  .ch-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+  .cbtn { display: flex; align-items: center; gap: 5px; padding: 6px 12px; background: var(--green-d); border: 1px solid var(--green-b); border-radius: 6px; color: var(--green); font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.15s; white-space: nowrap; }
+  .cbtn:hover { background: rgba(74,222,128,0.14); border-color: var(--green); }
+  .cbtn.ok { background: rgba(74,222,128,0.2); }
+  .card-body { padding: 18px 20px; }
+  .pre { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.9; color: #7fb891; white-space: pre-wrap; word-break: break-word; }
+
+  /* TAGS */
+  .tags { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 18px; }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 9px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase; }
+  .tg { background: var(--green-d); color: var(--green); border: 1px solid var(--green-b); }
+  .tgo { background: var(--gold-d); color: var(--gold); border: 1px solid rgba(251,191,36,0.2); }
+  .tb { background: rgba(96,165,250,0.08); color: var(--blue); border: 1px solid rgba(96,165,250,0.2); }
+  .tr { background: rgba(248,113,113,0.08); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .tp { background: rgba(167,139,250,0.08); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+
+  /* GENERATOR */
+  .gen-box { background: var(--s1); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 22px; }
+  .gen-title { font-size: 16px; font-weight: 800; color: var(--white); margin-bottom: 3px; }
+  .gen-desc { font-size: 12px; color: var(--muted); margin-bottom: 22px; }
+
+  textarea {
+    width: 100%;
+    background: var(--s2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--white);
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 14px;
+  }
+  textarea:focus { border-color: var(--green-b); }
+  textarea::placeholder { color: var(--muted2); }
+
+  .gen-opts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .go { }
+  .go-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--green); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 7px; display: block; }
+  select {
+    width: 100%;
+    background: var(--s2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    color: var(--white);
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus { border-color: var(--green-b); }
+
+  .run-btn { width: 100%; padding: 13px; background: var(--green); color: #000; font-size: 14px; font-weight: 800; border: none; border-radius: 9px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.2px; transition: opacity 0.15s; }
+  .run-btn:hover { opacity: 0.87; }
+
+  /* OUTPUT */
+  .output-area { display: none; margin-top: 20px; }
+  .output-area.show { display: block; animation: fu 0.25s ease; }
+  .out-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .out-title { font-size: 14px; font-weight: 700; color: var(--white); }
+  .out-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); }
+
+  .scene-out {
+    background: var(--s2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.9;
+    color: #7fb891;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 500px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+  }
+  .out-btns { display: flex; gap: 10px; }
+  .out-btn { padding: 9px 18px; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; border: none; transition: all 0.15s; }
+  .ob-primary { background: var(--green); color: #000; }
+  .ob-primary:hover { opacity: 0.87; }
+  .ob-secondary { background: var(--s3); border: 1px solid var(--border2); color: var(--text); }
+  .ob-secondary:hover { border-color: var(--green-b); color: var(--green); }
+
+  /* SCENE TYPES GRID */
+  .scene-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+  .scene-card { background: var(--s1); border: 1px solid var(--border); border-radius: 11px; padding: 16px; }
+  .sc-icon { font-size: 22px; margin-bottom: 8px; }
+  .sc-name { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .sc-when { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--green); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .sc-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
+
+  /* EXAMPLE SCENES */
+  .ex-scene { background: var(--s2); border: 1px solid var(--border); border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; padding: 14px 18px; margin-bottom: 10px; }
+  .ex-ts { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--gold); margin-bottom: 4px; }
+  .ex-script { font-size: 12px; color: var(--text); font-style: italic; margin-bottom: 6px; }
+  .ex-prompt { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #7fb891; line-height: 1.7; }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--muted2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo">
+      <span>🐸</span>
+      <div class="logo-text">
+        <div class="ln">The Money Frog</div>
+        <div class="ls">Scene Prompt Generator v1.0</div>
+      </div>
+    </div>
+    <span class="pill">● TRANSCRIPT → SCENE PROMPTS</span>
+  </div>
+  <h1>Scene <em>Direction</em><br>Prompt System</h1>
+  <p>Paste your transcript → get one AI image prompt per 3-second scene, enter-separated, ready for automation. Daddu appears only when the script calls for a presenter. Everything else is icons and graphics on white — exactly like your competitors.</p>
+</div>
+
+<div class="nav">
+  <button class="nb on" onclick="sw('how')"><span class="nb-dot"></span>How It Works</button>
+  <button class="nb" onclick="sw('scene-types')"><span class="nb-dot"></span>Scene Types</button>
+  <button class="nb" onclick="sw('master-prompt')"><span class="nb-dot"></span>Master Analysis Prompt</button>
+  <button class="nb" onclick="sw('generator')"><span class="nb-dot"></span>Scene Prompt Generator</button>
+  <button class="nb" onclick="sw('examples')"><span class="nb-dot"></span>Example Outputs</button>
+  <button class="nb" onclick="sw('style-rules')"><span class="nb-dot"></span>Visual Style Rules</button>
+</div>
+
+<div class="wrap">
+
+  <!-- HOW IT WORKS -->
+  <div id="how" class="panel on">
+    <div class="ey">Tab 01</div>
+    <div class="st">How This System Works</div>
+    <div class="sd">One prompt analyzes your full transcript and outputs one image generation prompt per every 3 seconds of video. Each prompt is on its own line, separated by a blank line, ready for batch automation.</div>
+
+    <div class="info">
+      <strong>The output format:</strong> Each scene prompt is self-contained — timestamp, script text for that moment, and the exact image generation instruction. Paste the output into your automation tool and every prompt generates independently.
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="chl"><span class="ch-icon">⚡</span>
+          <div><div class="ch-title">The 5-Step Workflow</div><div class="ch-sub">DO THIS FOR EVERY VIDEO</div></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <pre class="pre">STEP 1 — GET YOUR TRANSCRIPT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Get your final approved script from the Script Prompt Vault.
+Add timestamps every 3 seconds manually OR paste the raw script 
+and let the Master Analysis Prompt handle the timing split.
+Format: [0:00] script text here / [0:03] next section / etc.
+
+STEP 2 — RUN THE MASTER ANALYSIS PROMPT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Paste your transcript into the Master Analysis Prompt (Tab 3).
+Add Daddu's reference image to the prompt.
+Claude reads the transcript, splits it into 3-second chunks,
+decides the correct scene type for each chunk, and writes 
+one image generation prompt per scene.
+
+STEP 3 — RECEIVE ENTER-SEPARATED PROMPTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Output format — one per scene, blank line between each:
+
+[SCENE 001 | 0:00–0:03]
+Script: "The number is $340,000. Remember that number."
+PROMPT: Flat icon illustration, pure white background (#FFFFFF),
+centered bold dollar sign icon with "$340,000" in large black
+Bebas Neue font below it, minimal shadow, no character...
+
+[SCENE 002 | 0:03–0:06]
+Script: "That's the difference between two decisions."
+PROMPT: Flat icon illustration, pure white background...
+
+STEP 4 — BATCH GENERATE IN IMAGE TOOL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Copy all scene prompts.
+Paste into your batch generation tool:
+- Adobe Firefly (best for Daddu consistency)
+- Leonardo.ai (best batch processing)
+- DALL-E via API (best for automation pipelines)
+Each prompt generates one frame independently.
+
+STEP 5 — ASSEMBLE IN VIDEO EDITOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Import all generated frames into CapCut / Pictory / DaVinci.
+Each frame = exactly 3 seconds on timeline.
+Sync with AI voiceover from ElevenLabs.
+Add transitions (cut only — no dissolve, no fade for this style).
+Export and done.</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="chl"><span class="ch-icon">🐸</span>
+          <div><div class="ch-title">When Daddu Appears vs When He Doesn't</div><div class="ch-sub">THE MOST IMPORTANT RULE</div></div>
+        </div>
+        <button class="cbtn" onclick="cp(this,'daddu-rule')">⎘ Copy</button>
+      </div>
+      <div class="card-body">
+        <pre class="pre" id="daddu-rule">DADDU APPEARS — Use these moments:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Opening hook (first 30 seconds) — Daddu introduces the topic
+✅ The "most people assume X" moment — Daddu delivers the contrarian line
+✅ The pattern interrupt (midpoint) — Daddu re-engages the viewer
+✅ The contrarian twist reveal — Daddu reacts to the shocking finding
+✅ The actionable close — Daddu walks through the steps
+✅ CTA moment — Daddu asks for the subscribe
+✅ Any moment where a human presenter would naturally speak directly to camera
+
+DADDU DOES NOT APPEAR — Replace with icons/graphics:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ Any moment where a statistic or number is being shown
+❌ Comparison diagrams (X vs Y arrows, side-by-side)
+❌ Process flows (money moving from A to B to C)
+❌ Chart or graph reveals
+❌ List items being displayed one by one
+❌ Dollar amounts or percentages being emphasized
+❌ Timeline visualizations (year 1, year 10, year 30)
+❌ Any "let me show you the math" section
+
+ROUGH RATIO TARGET:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+30% Daddu scenes — character, personality, trust
+70% Icon/graphic scenes — data, math, visual proof
+
+This matches exactly what your competitors do.
+Character builds trust. Icons deliver information.</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE TYPES -->
+  <div id="scene-types" class="panel">
+    <div class="ey">Tab 02</div>
+    <div class="st">7 Scene Types</div>
+    <div class="sd">Every 3-second frame falls into one of these 7 scene types. The Master Analysis Prompt automatically assigns the correct type based on what the script is saying at that moment.</div>
+
+    <div class="scene-grid">
+      <div class="scene-card">
+        <div class="sc-icon">🐸</div>
+        <div class="sc-name">TYPE 1 — Daddu Presenter</div>
+        <div class="sc-when">When: Direct address to viewer</div>
+        <div class="sc-desc">Daddu stands on white background, pointing or gesturing. Used for hooks, pattern interrupts, closes, and CTA. Character occupies left or right 40% of frame.</div>
+      </div>
+      <div class="scene-card">
+        <div class="sc-icon">💰</div>
+        <div class="sc-name">TYPE 2 — Single Icon Hero</div>
+        <div class="sc-when">When: One concept being named</div>
+        <div class="sc-desc">One large flat icon centered on white background. Dollar bill, piggy bank, house, car, briefcase. Clean, minimal. Number or label below the icon in bold font.</div>
+      </div>
+      <div class="scene-card">
+        <div class="sc-icon">⚖️</div>
+        <div class="sc-name">TYPE 3 — Comparison Split</div>
+        <div class="sc-when">When: Two options being compared</div>
+        <div class="sc-desc">Two icons side by side with arrow or VS between them. Exact style of your competitor screenshot 1. Clean labels under each. No background color — pure white.</div>
+      </div>
+      <div class="scene-card">
+        <div class="sc-icon">📊</div>
+        <div class="sc-name">TYPE 4 — Number/Stat Hero</div>
+        <div class="sc-when">When: Key number or stat revealed</div>
+        <div class="sc-desc">Large bold number dominates center of white frame. Supporting label above or below in smaller font. Accent color on the number (green, red, gold). Nothing else.</div>
+      </div>
+      <div class="scene-card">
+        <div class="sc-icon">➡️</div>
+        <div class="sc-name">TYPE 5 — Process Flow</div>
+        <div class="sc-when">When: Money or steps moving</div>
+        <div class="sc-desc">Icons connected by arrows showing a process. Exact style of competitor screenshot 1 (money → savings account, money → HYSA). Horizontal or branching flow on white.</div>
+      </div>
+      <div class="scene-card">
+        <div class="sc-icon">📈</div>
+        <div class="sc-name">TYPE 6 — Chart/Graph</div>
+        <div class="sc-when">When: Growth, comparison over time</div>
+        <div class="sc-desc">Simple flat bar chart or line graph on white. Clean axes, 2–3 bars max. Color coding: green = good, red = bad, gray = average. Bold number labels on bars.</div>
+      </div>
+      <div class="scene-card">
+        <div class="sc-icon">📋</div>
+        <div class="sc-name">TYPE 7 — List Item</div>
+        <div class="sc-when">When: Numbered list being revealed</div>
+        <div class="sc-desc">Number (bold, large) + icon + label. One item per frame. Previous items shown smaller/faded in background to show progress. Clean, editorial, white background.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="chl"><span class="ch-icon">🎨</span>
+          <div><div class="ch-title">Universal Visual Style Rules for All Scene Types</div><div class="ch-sub">EVERY FRAME MUST FOLLOW THESE</div></div>
+        </div>
+        <button class="cbtn" onclick="cp(this,'style-block')">⎘ Copy</button>
+      </div>
+      <div class="card-body">
+        <pre class="pre" id="style-block">UNIVERSAL VISUAL STYLE — The Money Frog Video Frames
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Background: Pure white (#FFFFFF) always — no gradients, no textures
+Icon style: Flat 2D illustration, clean outlines, minimal shadow
+Line weight: Consistent medium weight — not too thin, not chunky
+Color palette per frame: Max 3 colors (black outlines + 1 accent + white)
+Accent colors to rotate: 
+  - Money/positive topics: Green (#2d6a4f) or Gold (#e9c46a)
+  - Warning/negative topics: Red (#c1121f) or Orange (#f4a261)
+  - Neutral/data topics: Navy (#1d3557) or Dark gray (#333333)
+Typography: Bebas Neue or similar bold condensed for numbers
+            Clean sans-serif (Montserrat Bold) for labels
+Aspect ratio: 16:9, 1920x1080px
+Frame feel: Clean, professional, educational — like a textbook came alive
+Reference: Match the exact visual style of the competitor screenshots provided
+
+WHAT NEVER APPEARS IN ANY FRAME:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✕ Photographic backgrounds
+✕ Gradient backgrounds (white only)
+✕ More than 3 icons per frame
+✕ Decorative elements unrelated to the script
+✕ Text longer than 6 words per frame
+✕ More than 2 font sizes per frame
+✕ Drop shadows on icons (flat style only)
+✕ 3D elements or realistic rendering (except Daddu)</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- MASTER PROMPT -->
+  <div id="master-prompt" class="panel">
+    <div class="ey">Tab 03</div>
+    <div class="st">Master Analysis Prompt</div>
+    <div class="sd">This is the single prompt that takes your full transcript and outputs every scene prompt in one run. Paste transcript inside, attach Daddu's image, run in Claude.</div>
+
+    <div class="tags">
+      <span class="tag tg">Run in Claude</span>
+      <span class="tag tgo">Attach Daddu image</span>
+      <span class="tag tb">Paste full transcript inside</span>
+      <span class="tag tr">Outputs 1 prompt per 3 seconds</span>
+      <span class="tag tp">Enter-separated output</span>
+    </div>
+
+    <div class="info">
+      <strong>Important:</strong> For a 20-minute video this generates ~400 scene prompts. Claude may split the output into multiple messages. Add "continue" if it stops. All prompts will be enter-separated and automation-ready.
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="chl"><span class="ch-icon">📋</span>
+          <div><div class="ch-title">Master Scene Analysis + Prompt Generation Prompt</div><div class="ch-sub">PASTE TRANSCRIPT INSIDE → ATTACH DADDU IMAGE → RUN IN CLAUDE</div></div>
+        </div>
+        <button class="cbtn" onclick="cp(this,'master-p')">⎘ Copy Full Prompt</button>
+      </div>
+      <div class="card-body">
+        <pre class="pre" id="master-p">You are a visual director and scene designer for "The Money Frog" — 
+a US personal finance YouTube channel. The channel uses flat icon 
+animation style on pure white backgrounds, similar to educational 
+explainer videos. The channel mascot is Daddu — a cartoon frog 
+character (reference image attached).
+
+I am going to give you the full script transcript of a video.
+Your job is to:
+1. Split the transcript into 3-second chunks
+2. Assign the correct scene type to each chunk
+3. Write one AI image generation prompt per chunk
+4. Output every prompt enter-separated — one blank line between each
+
+═══════════════════════════════════════════════
+VIDEO INFORMATION
+═══════════════════════════════════════════════
+Video title: [PASTE TITLE]
+Video pillar: [Real Math / Contrarian / Age Hook / List]
+Total video length: [e.g. 20 minutes]
+Approximate scenes needed: [e.g. 400 scenes for 20 min]
+
+═══════════════════════════════════════════════
+TRANSCRIPT
+═══════════════════════════════════════════════
+[PASTE FULL SCRIPT TRANSCRIPT HERE]
+[Include timestamps if available, e.g.: [0:00] script text here]
+[If no timestamps, Claude will split at natural 3-second speech pace]
+[Average speaking pace: 2.3 words per second = ~7 words per scene]
+
+═══════════════════════════════════════════════
+DADDU CHARACTER REFERENCE
+═══════════════════════════════════════════════
+Daddu is attached as a reference image.
+He is a cartoon frog with:
+- Green skin, large expressive eyes
+- Dark olive knitted beanie hat
+- Large brown lace-up boots
+- Friendly, confident body
+- Semi-realistic cartoon style, clean outlines
+Maintain exact character design in all Daddu scenes.
+
+═══════════════════════════════════════════════
+SCENE TYPE RULES — Assign automatically based on script
+═══════════════════════════════════════════════
+
+TYPE 1 — DADDU PRESENTER
+Use when script is: direct address to viewer, hooks, "you" statements,
+contrarian reveals, pattern interrupts, CTAs, emotional moments
+Daddu pose options: [SHOCKED] [EXCITED] [WARNING] [CONFIDENT] [SECRETIVE] [THINKING]
+Daddu position: alternate LEFT and RIGHT each time he appears
+
+TYPE 2 — SINGLE ICON HERO  
+Use when script names: one financial concept, one product, one tool
+Examples: savings account, mortgage, 401k, credit card, paycheck
+Icon is centered, large, minimal, flat style on white
+
+TYPE 3 — COMPARISON SPLIT
+Use when script says: "vs", "compared to", "option A and option B",
+"on one hand... on the other", two things being weighed
+Two icons side by side with arrow or VS label between them
+
+TYPE 4 — NUMBER/STAT HERO
+Use when script states: a specific dollar amount, percentage, age,
+or year. The number IS the visual — nothing else needed
+Large bold number centered, accent color, label below
+
+TYPE 5 — PROCESS FLOW
+Use when script describes: money moving, a sequence of steps,
+cause and effect, "first X happens then Y"
+Icons connected by arrows showing direction of flow
+
+TYPE 6 — CHART/GRAPH
+Use when script compares: performance over time, growth projections,
+"after 10 years", "by retirement age", before vs after data
+Simple flat bar chart or line graph, clean axes, bold number labels
+
+TYPE 7 — LIST ITEM
+Use when script is revealing: numbered items in sequence,
+"number one", "the second thing", "here's another one"
+Bold number + icon + label, one item per frame
+
+═══════════════════════════════════════════════
+OUTPUT FORMAT — Follow this EXACTLY
+═══════════════════════════════════════════════
+
+For EVERY 3-second chunk output this block, then ONE blank line:
+
+[SCENE {number} | {start time}–{end time}]
+Script: "{exact words spoken in this 3-second window}"
+Type: {TYPE NUMBER AND NAME}
+Daddu: {YES — [POSE] [LEFT/RIGHT]} or {NO}
+PROMPT: {the full image generation prompt for this scene}
+
+Then ONE blank line before the next scene.
+
+═══════════════════════════════════════════════
+IMAGE PROMPT RULES — Apply to every PROMPT field
+═══════════════════════════════════════════════
+
+Every prompt must include ALL of these elements:
+
+STYLE LINE (always first):
+"Flat 2D illustration, pure white background (#FFFFFF), 
+clean icon style, educational explainer video aesthetic, 
+16:9 frame, 1920x1080px, no gradients, no textures, 
+minimal drop shadows, bold clean typography,"
+
+CONTENT LINE (what is actually shown):
+Describe exactly what icons, numbers, text, arrows, or 
+Daddu appears — match precisely to script words
+
+COLOR LINE:
+"Accent color: [GREEN #2d6a4f / RED #c1121f / GOLD #e9c46a / 
+NAVY #1d3557] for [what is highlighted],"
+
+DADDU LINE (only if Daddu appears):
+"Daddu the frog character (reference image) on [LEFT/RIGHT] 
+side, [POSE DESCRIPTION], 40% of frame width, eyes visible, 
+beanie and boots visible, white background behind him,"
+
+TEXT LINE (if text appears in frame):
+"Text rendered in Bebas Neue bold condensed font, 
+[size] pt, [color], positioned [where],"
+
+NEGATIVE LINE (always last):
+"--no photographic elements, no real people, no backgrounds, 
+no more than 3 icons per frame, no decorative elements, 
+no text longer than 6 words"
+
+═══════════════════════════════════════════════
+SCENE CONTINUITY RULES
+═══════════════════════════════════════════════
+
+[1] If the same concept spans multiple 3-second chunks,
+    evolve the scene — don't repeat the identical frame.
+    Example: "$340,000" frame → next frame adds a label or arrow
+
+[2] Daddu must not appear in more than 3 consecutive frames.
+    After 3 Daddu frames, switch to at least 2 icon frames.
+
+[3] Alternate Daddu LEFT and RIGHT every time he appears.
+    Never same position twice in a row.
+
+[4] For chart/graph frames that build over multiple scenes,
+    show the chart growing — add one bar or data point per frame.
+
+[5] After every 10 scenes, check: have I used at least 
+    3 different scene types? If not, vary the next scenes.
+
+[6] The first scene (0:00–0:03) should ALWAYS be Daddu 
+    unless the script opens with a statistic read-only.
+
+[7] The last scene (CTA) should ALWAYS be Daddu.
+
+═══════════════════════════════════════════════
+QUALITY CHECK — Before outputting, verify:
+═══════════════════════════════════════════════
+□ Every scene has a PROMPT field
+□ Every PROMPT starts with the STYLE LINE
+□ Daddu appears in ~30% of scenes total
+□ No two consecutive scenes have identical visual elements
+□ TYPE 4 (numbers) are used every time a specific stat is spoken
+□ TYPE 5 (flow) is used for any process or movement description
+□ All prompts are separated by exactly ONE blank line
+□ Scene numbering is sequential with no gaps
+□ Timestamps are accurate (every scene = exactly 3 seconds)
+
+Begin output now. If transcript is long, output scenes 001 onwards 
+and wait for "continue" before proceeding to next batch of scenes.
+Label each batch: "BATCH 1 (Scenes 001–050)" etc.</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="chl"><span class="ch-icon">➕</span>
+          <div><div class="ch-title">Continue Prompt — Use When Claude Stops Mid-Output</div><div class="ch-sub">SEND THIS WHEN OUTPUT CUTS OFF</div></div>
+        </div>
+        <button class="cbtn" onclick="cp(this,'cont-p')">⎘ Copy</button>
+      </div>
+      <div class="card-body">
+        <pre class="pre" id="cont-p">Continue from Scene {LAST SCENE NUMBER + 1}. 
+Maintain all formatting rules. 
+Output the next batch of scenes in the same format.
+One blank line between each scene block.
+Label this batch: "BATCH {N} (Scenes {start}–{end})"</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERATOR -->
+  <div id="generator" class="panel">
+    <div class="ey">Tab 04</div>
+    <div class="st">Quick Scene Prompt Generator</div>
+    <div class="sd">For individual scenes or manual overrides — paste a short transcript section and select the scene type. Generates the exact prompt for that one scene.</div>
+
+    <div class="gen-box">
+      <div class="gen-title">⚡ Generate a Single Scene Prompt</div>
+      <div class="gen-desc">Paste the exact words spoken in that 3-second window. Select the scene type and options. Get the full image generation prompt back.</div>
+
+      <label style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:7px;">Script Words (3 seconds = ~7 words)</label>
+      <textarea id="script-words" rows="3" placeholder="e.g. The number is $340,000. Remember that."></textarea>
+
+      <label style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:7px;">Timestamp</label>
+      <textarea id="ts-input" rows="1" placeholder="e.g. 0:00–0:03" style="min-height:42px;"></textarea>
+
+      <div class="gen-opts">
+        <div class="go">
+          <span class="go-label">Scene Type</span>
+          <select id="scene-type">
+            <option value="1">TYPE 1 — Daddu Presenter</option>
+            <option value="2">TYPE 2 — Single Icon Hero</option>
+            <option value="3">TYPE 3 — Comparison Split</option>
+            <option value="4">TYPE 4 — Number/Stat Hero</option>
+            <option value="5">TYPE 5 — Process Flow</option>
+            <option value="6">TYPE 6 — Chart/Graph</option>
+            <option value="7">TYPE 7 — List Item</option>
+          </select>
+        </div>
+        <div class="go">
+          <span class="go-label">Daddu Pose (if TYPE 1)</span>
+          <select id="daddu-pose">
+            <option value="SHOCKED — eyes wide, hands near face">😱 Shocked</option>
+            <option value="EXCITED — hands up, wide eyes">💡 Excited</option>
+            <option value="WARNING — pointing at viewer, serious">😤 Warning</option>
+            <option value="CONFIDENT — arms crossed, smirk">😎 Confident</option>
+            <option value="SECRETIVE — finger on lips, smirk">🤫 Secretive</option>
+            <option value="THINKING — hand on chin, eyes narrowed">🤔 Thinking</option>
+          </select>
+        </div>
+        <div class="go">
+          <span class="go-label">Accent Color</span>
+          <select id="accent-col">
+            <option value="GREEN #2d6a4f">🟢 Green (positive)</option>
+            <option value="RED #c1121f">🔴 Red (warning)</option>
+            <option value="GOLD #e9c46a">🟡 Gold (money)</option>
+            <option value="NAVY #1d3557">🔵 Navy (neutral data)</option>
+            <option value="ORANGE #f4a261">🟠 Orange (caution)</option>
+          </select>
+        </div>
+        <div class="go">
+          <span class="go-label">Daddu Position</span>
+          <select id="daddu-pos">
+            <option value="LEFT">← Left Side</option>
+            <option value="RIGHT">Right Side →</option>
+          </select>
+        </div>
+        <div class="go">
+          <span class="go-label">Scene Number</span>
+          <textarea id="scene-num" rows="1" placeholder="e.g. 001" style="min-height:42px;"></textarea>
+        </div>
+        <div class="go">
+          <span class="go-label">Key Icon / Concept</span>
+          <textarea id="key-icon" rows="1" placeholder="e.g. piggy bank, dollar bill, house" style="min-height:42px;"></textarea>
+        </div>
+      </div>
+
+      <button class="run-btn" onclick="genScene()">🎬 Generate Scene Prompt</button>
+
+      <div class="output-area" id="single-out">
+        <div class="out-header">
+          <div class="out-title">Generated Scene Prompt</div>
+          <div class="out-meta" id="out-meta-single"></div>
+        </div>
+        <div class="scene-out" id="single-out-text"></div>
+        <div class="out-btns">
+          <button class="out-btn ob-primary" onclick="cpOut('single-out-text','cp-s-btn')" id="cp-s-btn">⎘ Copy Prompt</button>
+          <button class="out-btn ob-secondary" onclick="clearSingle()">✕ Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLES -->
+  <div id="examples" class="panel">
+    <div class="ey">Tab 05</div>
+    <div class="st">Example Scene Outputs</div>
+    <div class="sd">Real examples of what the Master Analysis Prompt outputs for each scene type. Use these to verify your output looks correct before running automation.</div>
+
+    <div class="info">
+      <strong>These are real examples</strong> based on a "Don't Use High Yield Savings Account" style video — similar to your competitor's 68K view video. Notice how Daddu appears only for presenter moments, not during data reveals.
+    </div>
+
+    <div class="ex-scene">
+      <div class="ex-ts">SCENE 001 | 0:00–0:03 | TYPE 1 — Daddu Presenter</div>
+      <div class="ex-script">"Your savings account is lying to you."</div>
+      <div class="ex-prompt">Flat 2D illustration, pure white background (#FFFFFF), clean icon style, educational explainer video aesthetic, 16:9 frame, 1920x1080px, no gradients, no textures, minimal drop shadows, bold clean typography, Daddu the frog character (reference image) on LEFT side, SHOCKED expression — eyes wide open, hands raised near face, leaning slightly back, 40% of frame width, eyes clearly visible, beanie and boots visible, white background behind him, bold black text on RIGHT side reading "YOUR SAVINGS IS LYING" in Bebas Neue condensed font, red accent (#c1121f) on the word "LYING", --no photographic elements, no real people, no background colors, no more than 3 icons per frame</div>
+    </div>
+
+    <div class="ex-scene">
+      <div class="ex-ts">SCENE 002 | 0:03–0:06 | TYPE 4 — Number/Stat Hero</div>
+      <div class="ex-script">"The average HYSA pays 4.8 percent right now."</div>
+      <div class="ex-prompt">Flat 2D illustration, pure white background (#FFFFFF), clean icon style, educational explainer video aesthetic, 16:9 frame, 1920x1080px, centered layout, large bold number "4.8%" in Bebas Neue font at 180pt, color green (#2d6a4f), smaller label below in Montserrat Bold reading "CURRENT HYSA RATE" at 32pt dark gray, no other elements, --no photographic elements, no real people, no background colors, no gradients, no decorative elements</div>
+    </div>
+
+    <div class="ex-scene">
+      <div class="ex-ts">SCENE 003 | 0:06–0:09 | TYPE 4 — Number/Stat Hero</div>
+      <div class="ex-script">"But inflation is running at 3.2 percent."</div>
+      <div class="ex-prompt">Flat 2D illustration, pure white background (#FFFFFF), clean icon style, 16:9 frame, 1920x1080px, centered layout, large bold number "3.2%" in Bebas Neue font at 180pt, color red (#c1121f) to signal warning/cost, smaller label below in Montserrat Bold reading "CURRENT INFLATION RATE" at 32pt dark gray, subtle upward arrow icon in red beside the number to indicate rising, --no photographic elements, no real people, no backgrounds, no more than 2 icons</div>
+    </div>
+
+    <div class="ex-scene">
+      <div class="ex-ts">SCENE 004 | 0:09–0:12 | TYPE 4 — Number/Stat Hero (evolved)</div>
+      <div class="ex-script">"That means your real return is only 1.6 percent."</div>
+      <div class="ex-prompt">Flat 2D illustration, pure white background (#FFFFFF), clean icon style, 16:9 frame, 1920x1080px, centered layout, large bold "4.8% − 3.2% = 1.6%" in Bebas Neue font, the "= 1.6%" portion highlighted in red (#c1121f) to emphasize disappointingly low result, clean minus sign between numbers, label below reading "YOUR REAL RETURN" in Montserrat Bold 28pt dark gray, --no photographic elements, no real people, no background colors</div>
+    </div>
+
+    <div class="ex-scene">
+      <div class="ex-ts">SCENE 005 | 0:12–0:15 | TYPE 3 — Comparison Split</div>
+      <div class="ex-script">"Your money can go to a savings account or a HYSA."</div>
+      <div class="ex-prompt">Flat 2D illustration, pure white background (#FFFFFF), clean icon style, educational explainer video, 16:9 frame, 1920x1080px, horizontal layout showing: LEFT — flat dollar bill icon with label "YOUR MONEY" below it, center — bold black arrows splitting up-right and down-right, upper-right — flat piggy bank icon in blue (#457b9d) with label "SAVINGS ACCOUNT" below, lower-right — flat rectangular bank card icon in green (#2d6a4f) with label "5% — HYSA" below, all icons same size and consistent line weight, --no photographic elements, no gradients, no Daddu, no more than 3 icons</div>
+    </div>
+
+    <div class="ex-scene">
+      <div class="ex-ts">SCENE 006 | 0:15–0:18 | TYPE 1 — Daddu Presenter</div>
+      <div class="ex-script">"But here's what almost nobody tells you about that HYSA."</div>
+      <div class="ex-prompt">Flat 2D illustration, pure white background (#FFFFFF), clean icon style, 16:9 frame, 1920x1080px, Daddu the frog character (reference image) on RIGHT side, SECRETIVE expression — finger on lips, slight smirk, eyes looking directly at viewer, leaning forward conspiratorially, 40% of frame width, beanie and boots clearly visible, bold black text on LEFT side: "BUT NOBODY TELLS YOU" in Bebas Neue condensed 64pt, accent line under "NOBODY" in red (#c1121f), --no photographic elements, no real people, no background colors</div>
+    </div>
+
+    <div class="ex-scene">
+      <div class="ex-ts">SCENE 007 | 0:18–0:21 | TYPE 6 — Chart/Graph</div>
+      <div class="ex-script">"Over 10 years, the gap between them grows to $34,000."</div>
+      <div class="ex-prompt">Flat 2D illustration, pure white background (#FFFFFF), clean icon style, 16:9 frame, 1920x1080px, simple flat bar chart with 2 bars side by side, LEFT bar — labeled "SAVINGS ACCOUNT" in gray, height representing lower growth, showing "$11,200" at top, RIGHT bar — labeled "INDEX FUND" in green (#2d6a4f), taller bar, showing "$45,200" at top, bold gap label between bars reading "$34,000 DIFFERENCE" in red with bracket indicating the gap, clean x-axis labeled "10 YEARS", no grid lines, no legend needed, Bebas Neue for numbers, Montserrat for labels, --no photographic elements, no real people, no decorative elements</div>
+    </div>
+  </div>
+
+  <!-- STYLE RULES -->
+  <div id="style-rules" class="panel">
+    <div class="ey">Tab 06</div>
+    <div class="st">Visual Style Rules</div>
+    <div class="sd">The exact reference style based on your competitor screenshots. Every frame must match this style precisely for a consistent, professional channel look.</div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="chl"><span class="ch-icon">🎨</span>
+          <div><div class="ch-title">Complete Style Reference — Paste Into Any Prompt</div><div class="ch-sub">BASED ON YOUR COMPETITOR SCREENSHOTS</div></div>
+        </div>
+        <button class="cbtn" onclick="cp(this,'style-ref')">⎘ Copy</button>
+      </div>
+      <div class="card-body">
+        <pre class="pre" id="style-ref">VISUAL STYLE REFERENCE — The Money Frog Video Frames
+Based on competitor analysis of top-performing finance channels
+
+BACKGROUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Always pure white (#FFFFFF) — identical to competitor style
+No off-white, cream, or light gray — pure white only
+No vignettes, gradients, or edge darkening
+Clean, flat, professional
+
+ICON STYLE (reference: competitor screenshots provided)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Flat 2D illustration style — NOT 3D, NOT photographic
+Consistent medium stroke weight on all outlines
+Icons filled with flat color (not gradient)
+Slight rounded corners on geometric shapes
+Style examples from competitor: 
+  - Dollar bill: gold/tan fill, green $ symbol, dark outline
+  - Piggy bank: blue/slate fill, white text, dark outline  
+  - HYSA card: olive green fill, white text, dark blue shadow bar
+  - Briefcases: solid black fill, white highlight lines
+  - Doctor/presenter character: black outline, flat white fill
+
+ARROWS AND CONNECTORS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Bold black arrows — same weight as icon outlines
+Straight arrows only (no curved) for simple flows
+Branching arrows for one-to-many comparisons
+Arrow style: solid filled arrowhead, medium shaft
+
+TYPOGRAPHY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Numbers/stats: Bebas Neue or Impact — large, bold, condensed
+Labels/titles: Montserrat Bold or similar geometric sans
+Text color: Dark charcoal (#222222) for labels
+Accent numbers: Match scene accent color (green/red/gold)
+Text inside icons: White, bold, centered
+Text hierarchy: Max 2 sizes per frame
+
+SPACING AND LAYOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Generous white space — icons should breathe
+Icons never touch frame edges (minimum 80px padding)
+Alignment: strict center or left-right balance
+Icon size: 200–350px for hero icons, 150–200px for secondary
+Number size: 180–220pt for stat heroes
+
+COLOR PALETTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Positive/money:  Green #2d6a4f or #40916c
+Warning/loss:    Red #c1121f or #e63946
+Neutral data:    Navy #1d3557 or Steel Blue #457b9d
+Highlight:       Gold #e9c46a or Amber #f4a261
+Outlines:        Dark charcoal #222222
+Background:      White #FFFFFF always
+
+DADDU IN FRAME (when he appears)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Rendering: Semi-realistic cartoon (slightly higher fidelity than flat icons)
+This contrast makes Daddu stand out as the personality element
+Size: 38–45% of frame width
+Position: Always left or right — never centered alone
+Background behind Daddu: same white as rest of frame
+Interaction: Daddu should visually connect with nearby text or icons
+             (pointing at them, reacting to numbers, gesturing toward content)</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="chl"><span class="ch-icon">🔧</span>
+          <div><div class="ch-title">Prompt Fix — If Output Looks Wrong</div><div class="ch-sub">ADD THESE LINES TO FIX COMMON AI ERRORS</div></div>
+        </div>
+        <button class="cbtn" onclick="cp(this,'fix-prompts')">⎘ Copy</button>
+      </div>
+      <div class="card-body">
+        <pre class="pre" id="fix-prompts">COMMON PROBLEMS AND FIXES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLEM: Background came out gray or off-white
+FIX: Add to prompt → "background must be pure white #FFFFFF hex 
+value, not cream, not light gray, not off-white, pure white only"
+
+PROBLEM: Icons look 3D or photorealistic
+FIX: Add to prompt → "strict 2D flat illustration only, 
+zero 3D effects, zero drop shadows on icons, zero gradients 
+inside icon fills, flat color fills only"
+
+PROBLEM: Daddu looks different from reference
+FIX: Add to prompt → "character MUST match attached reference 
+image exactly, same proportions, same beanie, same boots, 
+do not redesign or modify character"
+
+PROBLEM: Too much text rendered in image (AI text is garbled)
+FIX: Add to prompt → "do NOT render text in the image, 
+leave text zones as empty white space with a colored 
+rectangle placeholder where text will be added in Canva"
+
+PROBLEM: Too many elements crammed in frame
+FIX: Add to prompt → "maximum 2 icons only, generous 
+white space, icons must not overlap, simple and minimal"
+
+PROBLEM: Wrong color scheme appearing
+FIX: Add to prompt → "ONLY use these exact colors: 
+white #FFFFFF background, dark outline #222222, 
+accent [COLOR] #[HEX], nothing else"
+
+PROBLEM: Daddu too small or pushed to corner
+FIX: Add to prompt → "Daddu must occupy exactly 40% of 
+total frame width, positioned at [LEFT/RIGHT] third of frame,
+not smaller, not pushed to edge"</pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function sw(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.nb').forEach(b => b.classList.remove('on'));
+    document.getElementById(id).classList.add('on');
+    event.currentTarget.classList.add('on');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cp(btn, id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+      const o = btn.innerHTML;
+      btn.innerHTML = '✓ Copied!';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.innerHTML = o; btn.classList.remove('ok'); }, 2000);
+    });
+  }
+
+  function cpOut(id, btnId) {
+    const el = document.getElementById(id);
+    const btn = document.getElementById(btnId);
+    if (!el || !btn) return;
+    navigator.clipboard.writeText(el.innerText || el.textContent).then(() => {
+      const o = btn.innerHTML;
+      btn.innerHTML = '✓ Copied!';
+      setTimeout(() => btn.innerHTML = o, 2000);
+    });
+  }
+
+  const typeDescriptions = {
+    1: { name: 'Daddu Presenter', hasDaddu: true },
+    2: { name: 'Single Icon Hero', hasDaddu: false },
+    3: { name: 'Comparison Split', hasDaddu: false },
+    4: { name: 'Number/Stat Hero', hasDaddu: false },
+    5: { name: 'Process Flow', hasDaddu: false },
+    6: { name: 'Chart/Graph', hasDaddu: false },
+    7: { name: 'List Item', hasDaddu: false }
+  };
+
+  const typePromptBlocks = {
+    1: (pose, pos, icon, color) => `${pos} side, ${pose}, 40% of frame width, eyes clearly visible, beanie and boots visible, white background behind him, bold text on opposite side with key message from script,`,
+    2: (pose, pos, icon, color) => `large flat ${icon || 'financial concept'} icon centered on frame, 300px, flat fill color ${color}, dark outline #222222, label below icon in Montserrat Bold 32pt dark gray, generous white space around icon,`,
+    3: (pose, pos, icon, color) => `two flat icons side by side with bold black branching arrows between them, left icon labeled with Option A, right icon labeled with Option B, equal size icons 220px each, center divider with VS or arrow element, all on pure white, consistent icon line weight,`,
+    4: (pose, pos, icon, color) => `large bold number centered at 180pt Bebas Neue font, color ${color}, descriptive label below in Montserrat Bold 32pt #222222, no other elements, number is the hero and only focus of frame,`,
+    5: (pose, pos, icon, color) => `horizontal process flow diagram, dollar bill or money icon on LEFT, bold black arrows pointing RIGHT to two or more outcome icons, each outcome labeled below in Montserrat Bold 28pt, consistent flat icon style, all on white background, no overlapping elements,`,
+    6: (pose, pos, icon, color) => `simple flat bar chart with 2–3 bars, white background, clean dark x and y axis lines, bars filled with flat colors (green ${color} for positive, red #c1121f for negative), bold number labels ON TOP of each bar in Bebas Neue, short axis labels in Montserrat, no grid lines, no legend box,`,
+    7: (pose, pos, icon, color) => `bold large number "${icon || 'N'}" on LEFT in Bebas Neue 140pt ${color}, flat icon representing the list item concept centered, short label text below icon in Montserrat Bold 28pt, previous list items shown at 40% opacity smaller in background to show progress,`
+  };
+
+  function genScene() {
+    const script = document.getElementById('script-words').value.trim();
+    const ts = document.getElementById('ts-input').value.trim() || '0:00–0:03';
+    const type = parseInt(document.getElementById('scene-type').value);
+    const pose = document.getElementById('daddu-pose').value;
+    const pos = document.getElementById('daddu-pos').value;
+    const color = document.getElementById('accent-col').value;
+    const num = document.getElementById('scene-num').value.trim() || '001';
+    const icon = document.getElementById('key-icon').value.trim();
+
+    if (!script) { alert('Please enter the script words for this scene.'); return; }
+
+    const t = typeDescriptions[type];
+    const dadduLine = t.hasDaddu
+      ? `Daddu the frog character (reference image) on ${pos} side, ${pose}, 40% of frame width, beanie and boots visible,`
+      : 'NO DADDU in this frame —';
+
+    const contentBlock = typePromptBlocks[type](pose, pos, icon, color);
+
+    const out = `[SCENE ${num.padStart(3,'0')} | ${ts}]
+Script: "${script}"
+Type: TYPE ${type} — ${t.name}
+Daddu: ${t.hasDaddu ? `YES — ${pose.split('—')[0].trim()} | ${pos}` : 'NO'}
+PROMPT: Flat 2D illustration, pure white background (#FFFFFF), clean icon style, educational explainer video aesthetic, 16:9 frame, 1920x1080px, no gradients, no textures, minimal drop shadows, bold clean typography, ${dadduLine} ${contentBlock} Accent color: ${color}, text in Bebas Neue bold condensed for numbers and Montserrat Bold for labels, --no photographic elements, no real people, no background colors, no more than 3 icons per frame, no decorative unrelated elements, no text longer than 6 words per element`;
+
+    document.getElementById('single-out-text').textContent = out;
+    document.getElementById('out-meta-single').textContent = `TYPE ${type} | ${ts} | ${t.hasDaddu ? 'DADDU: YES' : 'ICON ONLY'}`;
+    document.getElementById('single-out').classList.add('show');
+  }
+
+  function clearSingle() {
+    document.getElementById('single-out').classList.remove('show');
+    document.getElementById('script-words').value = '';
+    document.getElementById('ts-input').value = '';
+    document.getElementById('scene-num').value = '';
+    document.getElementById('key-icon').value = '';
+  }
+</script>
+</body>
+</html>
